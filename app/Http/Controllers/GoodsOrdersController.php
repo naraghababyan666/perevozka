@@ -29,7 +29,7 @@ class GoodsOrdersController extends Controller
             return response()->json([
                 'success' => false,
                 "errors" => $validator->errors()
-            ])->header('Status-Code', 200);
+            ])->header('Status-Code', 203);
         }
 
         $goods_orders = new GoodsOrders();

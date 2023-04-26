@@ -11,8 +11,8 @@ class ReviewController extends Controller
     public function create(Request $request)
     {
         $data = Validator::make($request->all(), [
-            'writer_id' => 'required',
-            'company_id' => 'required',
+            'writer_id' => 'required|exists:companies',
+            'company_id' => 'required|exists:companies',
             'review_text' => 'required',
         ]);
 

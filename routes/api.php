@@ -45,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('create-ride', [CompanyController::class, 'createRide'])->name('create-ride');
     Route::post('createOrder', [GoodsOrdersController::class, 'createOrder'])->name('create-order');
     Route::get('getOrders', [CompanyController::class, 'getOrders']);
+    Route::get('getMyOrders', [CompanyController::class, 'getMyOrders']);
+
 
     Route::get('company/{company}', [CompanyController::class, 'companyByName'])->name('find-company');
 });

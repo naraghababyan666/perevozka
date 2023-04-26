@@ -217,6 +217,184 @@ paths:
       security:
         - bearerAuth: [ ]
 
+  /api/createOrder:
+    post:
+      tags:
+        - For OWNER
+      description: "Create order. Only for role OWNER and OWNER AND DRIVER."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upload_loc_id:
+                  type: string
+                  required: true
+                  example: "Москва"
+                onload_loc_id:
+                  type: string
+                  required: true
+                  example: "Краснодар"
+                kuzov_type:
+                  type: string
+                  required: true
+                  example: "трал"
+                  description: "Тип кузова ( самосвал/трал/сцепка/сельхозник/тонар)"
+                loading_type:
+                  type: string
+                  required: true
+                  example: "элеватор"
+                  description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
+                loading_date:
+                  type: string
+                  required: true
+                  example: "2023-04-18 00:01:33"
+                max_weight:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "кг"
+                max_volume:
+                  type: integer
+                  required: true
+                  example: 100
+                  description: "m3"
+                payment_type:
+                  type: string
+                  required: true
+                  example: "налич"
+                  description: "Тип оплаты ( нал/безнал, с НДС/без НДС, с предоплатой)"
+                ruble_per_kg:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "Ставка рубль/кг"
+                phone_number:
+                  type: string
+                  required: true
+                  example: "79852233456"
+                company_name:
+                  type: string
+                  required: true
+                  example: "Hanrayin dzayn"
+      responses:
+        200:
+          description: 'Successfully created'
+        203:
+          description: "Validation error"
+      security:
+        - bearerAuth: [ ]
+  /api/getMyOrders:
+    get:
+      tags:
+        - For OWNER
+      responses:
+        200:
+          description: 'Orders list'
+      security:
+        - bearerAuth: [ ]
+
+  /api/create-ride:
+    post:
+      tags:
+        - For DRIVER
+      description: "Create ride(avelcnel avtoyi tvyalnery or apranq champoxy mtni tesni inch reysner kan or apranqy champe)"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upload_loc_id:
+                  type: string
+                  required: true
+                  example: "Москва"
+                onload_loc_id:
+                  type: string
+                  required: true
+                  example: "Краснодар"
+                kuzov_type:
+                  type: string
+                  required: true
+                  example: "трал"
+                  description: "Тип кузова ( самосвал/трал/сцепка/сельхозник/тонар)"
+                loading_type:
+                  type: string
+                  required: true
+                  example: "элеватор"
+                  description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
+                loading_date:
+                  type: string
+                  required: true
+                  example: "2023-04-18 00:01:33"
+                max_weight:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "кг"
+                max_volume:
+                  type: integer
+                  required: true
+                  example: 100
+                  description: "m3"
+                payment_type:
+                  type: string
+                  required: true
+                  example: "налич"
+                  description: "Тип оплаты ( нал/безнал, с НДС/без НДС, с предоплатой)"
+                ruble_per_kg:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "Ставка рубль/кг"
+                phone_number:
+                  type: string
+                  required: true
+                  example: "79852233456"
+                company_name:
+                  type: string
+                  required: true
+                  example: "Hanrayin dzayn"
+      responses:
+        200:
+          description: 'Successfully created'
+      security:
+        - bearerAuth: [ ]
+
+  /api/review/create:
+    post:
+      tags:
+        - Review
+      description: "Write review about company"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                writer_id:
+                  type: integer
+                  required: true
+                  example: 1
+                  description: 'Groxi id-n'
+                company_id:
+                  type: integer
+                  required: true
+                  example: 2
+                  description: 'Umor bdi gres ed kampaniayi id-n'
+                review_text:
+                  type: string
+                  required: true
+                  example: "Oh no, it's amazing!"
+      responses:
+        200:
+          description: 'Review successfully created'
+        203:
+          description: "Validation error"
+      security:
+        - bearerAuth: [ ]
+
 components:
   schemas:
     Company:

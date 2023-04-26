@@ -22,10 +22,9 @@ class CompanyController extends Controller
         dd($company);
     }
 
-    public function createRide(Request $request){
+    public function createRide(\Illuminate\Http\Request $request){
         if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER || Auth::user()['role_id'] == Company::IS_DRIVER){
             $validator = Validator::make($request->all(), [
-                'company_id' => 'required|exists:companies',
                 'upload_loc_id' => 'required',
                 'onload_loc_id' => 'required',
                 'kuzov_type' => 'required',
@@ -43,9 +42,20 @@ class CompanyController extends Controller
                     "errors" => $validator->errors()
                 ])->header('Status-Code', 200);
             }
-            RideOrders::query()->create($validator->validated());
-
+            $data = $validator->validated();
+            $data['company_id'] = Auth::id();
+            RideOrders::query()->create($data);
+            $lastRide = RideOrders::query()->orderBy('created_at', "DESC")->first();
+            return response()->json(['success' => true, 'data' => $lastRide] );
+        }else{
+            return response()->json(['success' => false, 'message' => 'Permission denied!']);
         }
+    }
+
+    public function getMyOrders(){
+        $orders = GoodsOrders::query()->where('company_id', Auth::id())->get();
+
+        return response()->json(['success' => true, 'data' => $orders]);
     }
 
     public function getOrders(\Illuminate\Http\Request $request){
