@@ -9,6 +9,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\ManagerController;
 use \App\Http\Controllers\ReviewController;
 use \App\Http\Controllers\GoodsOrdersController;
+use \App\Http\Controllers\RegionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,8 @@ use \App\Http\Controllers\GoodsOrdersController;
 
 Route::post('/registration', [AuthController::class, 'registration']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::get('city/{cityName}', [RegionController::class, 'filterCity']);
 
 //Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('company-by-id');
 Route::middleware('auth:sanctum')->group(function (){
