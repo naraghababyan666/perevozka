@@ -26,7 +26,7 @@ Route::post('/registration', [AuthController::class, 'registration']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('city/{cityName}', [RegionController::class, 'filterCity']);
-
+Route::get('infoCity/{CityId}', [RegionController::class, 'getInfoCityById']);
 //Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('company-by-id');
 Route::middleware('auth:sanctum')->group(function (){
     Route::prefix('manager')->group(function () {

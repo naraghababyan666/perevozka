@@ -15,4 +15,12 @@ class RegionController extends Controller
         $result = RussiaRegions::query()->where('CityName', 'like', '%' . $text . '%')->orderBy('CitySize', 'DESC')->get();
         return response()->json(['success' => true, 'cities' => $result]);
     }
+
+    public function getInfoCityById($id){
+        $city = RussiaRegions::query()->where('CityId', '=', $id)->first();
+        if(!is_null($city)){
+            return response()->json(['success' => true, 'data' => $city], 200);
+        }
+        return response()->json(['success' => false, 'data' => 'City not found'], 404);
+    }
 }

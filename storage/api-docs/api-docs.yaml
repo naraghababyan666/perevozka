@@ -117,6 +117,21 @@ paths:
           description: 'Returned cities list'
         403:
           description: "Invalid string length"
+  /api/infoCity/{CityId}:
+    get:
+      tags:
+        - Api's
+      description: "Find information about city by id"
+      parameters:
+        - in: path
+          name: CityId
+          required: true
+          description: "City id, example '21377'"
+      responses:
+        200:
+          description: 'Returned city'
+        404:
+          description: "City not found"
   /api/favorite/list:
     get:
       tags:
@@ -235,7 +250,7 @@ paths:
     post:
       tags:
         - For OWNER
-      description: "Create order. Only for role OWNER and OWNER AND DRIVER."
+      description: "Create order. Only for role OWNER and OWNER AND DRIVER... upload_loc_id meke onload_loc_id iranc id-nery kvercneq city/{CityName} apiic, man gukaq qaxaqy u kxrgeq CityId-n"
       requestBody:
         content:
           application/json:
@@ -243,11 +258,11 @@ paths:
               type: object
               properties:
                 upload_loc_id:
-                  type: string
+                  type: integer
                   required: true
                   example: "Москва"
                 onload_loc_id:
-                  type: string
+                  type: integer
                   required: true
                   example: "Краснодар"
                 kuzov_type:
@@ -313,7 +328,7 @@ paths:
     post:
       tags:
         - For DRIVER
-      description: "Create ride(avelcnel avtoyi tvyalnery or apranq champoxy mtni tesni inch reysner kan or apranqy champe)"
+      description: "Create ride(avelcnel avtoyi tvyalnery or apranq champoxy mtni tesni inch reysner kan or apranqy champe). Upload_loc_id meke Unload_loc_id iranc id-nery krnaq vercneq city/{CityName} api-i mejic, qaxaqy man gukaq kgtninq u kgreq ira CityId"
       requestBody:
         content:
           application/json:
@@ -321,13 +336,13 @@ paths:
               type: object
               properties:
                 upload_loc_id:
-                  type: string
+                  type: integer
                   required: true
-                  example: "Москва"
+                  example: "60979"
                 onload_loc_id:
-                  type: string
+                  type: integer
                   required: true
-                  example: "Краснодар"
+                  example: "96892"
                 kuzov_type:
                   type: string
                   required: true
