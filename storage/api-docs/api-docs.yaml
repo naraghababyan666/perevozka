@@ -103,6 +103,20 @@ paths:
           description: "Order not found"
       security:
         - bearerAuth: [ ]
+  /api/city/{cityName}:
+    get:
+      tags:
+        - Api's
+      parameters:
+        - in: path
+          name: cityName
+          required: true
+          description: "City name, example 'Москва'"
+      responses:
+        200:
+          description: 'Returned cities list'
+        403:
+          description: "Invalid string length"
   /api/favorite/list:
     get:
       tags:
