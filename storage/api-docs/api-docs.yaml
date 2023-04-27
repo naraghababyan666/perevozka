@@ -260,11 +260,11 @@ paths:
                 upload_loc_id:
                   type: integer
                   required: true
-                  example: "Москва"
+                  example: "3400"
                 onload_loc_id:
                   type: integer
                   required: true
-                  example: "Краснодар"
+                  example: "6500"
                 kuzov_type:
                   type: string
                   required: true

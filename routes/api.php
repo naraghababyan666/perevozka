@@ -54,6 +54,5 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::get('company/{company}', [CompanyController::class, 'companyByName'])->name('find-company');
 });
 
-
 Route::get('test', [CompanyController::class, 'testt']);
 
