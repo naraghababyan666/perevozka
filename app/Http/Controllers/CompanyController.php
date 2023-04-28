@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\GoodsOrders;
 use App\Models\Region;
 use App\Models\RideOrders;
+use App\Models\RussiaRegions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
@@ -54,7 +55,10 @@ class CompanyController extends Controller
 
     public function getMyOrders(){
         $orders = GoodsOrders::query()->where('company_id', Auth::id())->get();
-
+        foreach ($orders as $order){
+            $order['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['upload_loc_id']));
+            $order['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['onload_loc_id']));
+        }
         return response()->json(['success' => true, 'data' => $orders]);
     }
 
