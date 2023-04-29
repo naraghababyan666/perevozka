@@ -9,6 +9,7 @@ use App\Models\Region;
 use App\Models\RideOrders;
 use App\Models\RussiaRegions;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,47 +64,90 @@ class CompanyController extends Controller
     }
 
     public function getOrders(\Illuminate\Http\Request $request){
+        $data= $request->all();
+//        dd(isset($data['upload_loc_radius']));
+        if (!isset($data['upload_loc_radius'])){
+            $data['upload_loc_radius'] = 100;
+        }
+        if(isset($data['upload_loc_id'] )){
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/". $data['upload_loc_id'] ."/near?radius=".$data['upload_loc_radius'],// your preferred link
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_TIMEOUT => 30000,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    // Set Here Your Requesred Headers
+                    'Content-Type: application/json',
+                    'Authorization: Bearer 3686751bb23c4aed92e18fd096f5b18e'
+                ),
+            ));
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+
+            if ($err) {
+                return response()->json(['success' => false, 'message' => 'Server error']);
+            } else {
+                dd(json_decode($response));
+            }
+
+
+
+//            $response = Http::get("https://api.ati.su/v1.0/dictionaries/cities/". $data['upload_loc_id'] ."/near?radius=".$data['upload_loc_radius']);
+//            $response = Http::get("https://dummyjson.com/products/1");
+
+//            dd($data['upload_loc_id'], $data['upload_loc_radius'], $response->body());
+        }
+
+
+
+
+
         // Координаты города Анапы
 //        $lat1 = 44.8949650;
 //        $lng1 = 37.3161700;
-        if(isset($request->all()['lat']) && isset($request->all()['lng'])) {
-            $latitude = $request->all()['lat'];
-            $longitude = $request->all()['lng'];
-            // Радиус поиска в км
-
-            $radius = (int)$request->all()['radius'] ?? 100;
-            $radius = 1 * $radius;
-            // Функция для вычисления расстояния между двумя точками на поверхности Земли
-            function distance($lat2, $lng2, $lat_start, $lng_start)
-            {
-                //            $lat1 = 44.8949650;
-                //            $lng1 = 37.3161700;
-                $R = 6371;  // Радиус Земли в км
-                $dlat = deg2rad($lat2 - $lat_start);
-                $dlng = deg2rad($lng2 - $lat_start);
-                $a = sin($dlat / 2) ** 2 + cos(deg2rad($lat_start)) * cos(deg2rad($lat2)) * sin($dlng / 2) ** 2;
-                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-                $d = $R * $c;
-                return $d;
-            }
-
-
-            $cities = Region::all();
-
-            // Отфильтрованный массив городов
-            $filtered_cities = array();
-            foreach ($cities as $city) {
-                $d = distance($city['lat'], $city['lng'], $latitude, $longitude);
-                if ($d <= $radius) {
-                    $city['distance'] = $d;
-                    $filtered_cities[] = $city;
-                }
-            }
-            dd($filtered_cities);
-        }else{
-            $orders = GoodsOrders::all();
-            return response()->json(['success' => true, 'orders' => $orders]);
-        }
+//        if(isset($request->all()['lat']) && isset($request->all()['lng'])) {
+//            $latitude = $request->all()['lat'];
+//            $longitude = $request->all()['lng'];
+//            // Радиус поиска в км
+//
+//            $radius = (int)$request->all()['radius'] ?? 100;
+//            $radius = 1 * $radius;
+//            // Функция для вычисления расстояния между двумя точками на поверхности Земли
+//            function distance($lat2, $lng2, $lat_start, $lng_start)
+//            {
+//                //            $lat1 = 44.8949650;
+//                //            $lng1 = 37.3161700;
+//                $R = 6371;  // Радиус Земли в км
+//                $dlat = deg2rad($lat2 - $lat_start);
+//                $dlng = deg2rad($lng2 - $lat_start);
+//                $a = sin($dlat / 2) ** 2 + cos(deg2rad($lat_start)) * cos(deg2rad($lat2)) * sin($dlng / 2) ** 2;
+//                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+//                $d = $R * $c;
+//                return $d;
+//            }
+//
+//
+//            $cities = Region::all();
+//
+//            // Отфильтрованный массив городов
+//            $filtered_cities = array();
+//            foreach ($cities as $city) {
+//                $d = distance($city['lat'], $city['lng'], $latitude, $longitude);
+//                if ($d <= $radius) {
+//                    $city['distance'] = $d;
+//                    $filtered_cities[] = $city;
+//                }
+//            }
+//            dd($filtered_cities);
+//        }else{
+//            $orders = GoodsOrders::all();
+//            return response()->json(['success' => true, 'orders' => $orders]);
+//        }
     }
 
 }
