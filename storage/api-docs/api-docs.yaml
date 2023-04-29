@@ -212,10 +212,10 @@ paths:
             schema:
               type: object
               properties:
-                company_id:
-                  type: integer
+                email:
+                  type: string
                   required: true
-                  example: 1
+                  example: "garegin@gmail.cos"
                 first_name:
                   type: string
                   required: true
