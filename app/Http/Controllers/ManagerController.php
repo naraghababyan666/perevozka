@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Manager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,7 +11,7 @@ class ManagerController extends Controller
 {
     public function create(Request $request){
         $data = Validator::make($request->all(), [
-            'company_id' => "required",
+            'email' => "required",
             'first_name' => 'required',
             'last_name' => 'required'
         ]);
@@ -19,6 +20,9 @@ class ManagerController extends Controller
                 'success' => false,
                 "errors" => $data->errors()
             ])->header('Status-Code', 200);
+        }
+        if(!Company::query()->where('email', $data->validated()['email'])->exists()){
+            return response()->json(['success' => false, 'message' => 'Email not found']);
         }
 
         $manager = new Manager();

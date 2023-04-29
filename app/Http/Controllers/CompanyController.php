@@ -65,15 +65,18 @@ class CompanyController extends Controller
 
     public function getOrders(\Illuminate\Http\Request $request){
         $data= $request->all();
-//        dd(isset($data['upload_loc_radius']));
         if (!isset($data['upload_loc_radius'])){
             $data['upload_loc_radius'] = 100;
         }
-        if(isset($data['upload_loc_id'] )){
+        if (!isset($data['onload_loc_radius'])){
+            $data['onload_loc_radius'] = 100;
+        }
+        $upload_city_ids = [];
+        $onload_city_ids = [];
+        if(isset($data['upload_loc_id'] )) {
             $curl = curl_init();
-
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/". $data['upload_loc_id'] ."/near?radius=".$data['upload_loc_radius'],// your preferred link
+                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/" . $data['upload_loc_id'] . "/near?radius=" . $data['upload_loc_radius'],// your preferred link
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_TIMEOUT => 30000,
@@ -92,16 +95,40 @@ class CompanyController extends Controller
             if ($err) {
                 return response()->json(['success' => false, 'message' => 'Server error']);
             } else {
-                dd(json_decode($response));
+                foreach (json_decode($response) as $item){
+                    $upload_city_ids[] = $item->CityId;
+                }
             }
-
-
-
-//            $response = Http::get("https://api.ati.su/v1.0/dictionaries/cities/". $data['upload_loc_id'] ."/near?radius=".$data['upload_loc_radius']);
-//            $response = Http::get("https://dummyjson.com/products/1");
-
-//            dd($data['upload_loc_id'], $data['upload_loc_radius'], $response->body());
         }
+        if(isset($data['onload_loc_id'] )) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/" . $data['onload_loc_id'] . "/near?radius=" . $data['onload_loc_radius'],// your preferred link
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_TIMEOUT => 30000,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer 3686751bb23c4aed92e18fd096f5b18e'
+                ),
+            ));
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+
+            if ($err) {
+                return response()->json(['success' => false, 'message' => 'Server error']);
+            } else {
+                foreach (json_decode($response) as $item){
+                    $onload_city_ids[] = $item->CityId;
+                }
+            }
+        }
+
+
+        dd($upload_city_ids, $onload_city_ids);
 
 
 
