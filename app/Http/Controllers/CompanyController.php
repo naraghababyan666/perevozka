@@ -9,6 +9,7 @@ use App\Models\Region;
 use App\Models\RideOrders;
 use App\Models\RussiaRegions;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
@@ -64,15 +65,31 @@ class CompanyController extends Controller
     }
 
     public function getOrders(\Illuminate\Http\Request $request){
+        //upload_loc_id
+        //upload_loc_radius
+        //onload_loc_id
+        //onload_loc_radius
+        //loading_type
+        //date_from
+        //date_to
+        //min_deposit
+        //order_by norery
         $data= $request->all();
+
         if (!isset($data['upload_loc_radius'])){
             $data['upload_loc_radius'] = 100;
         }
         if (!isset($data['onload_loc_radius'])){
             $data['onload_loc_radius'] = 100;
         }
+        if($data['upload_loc_radius'] > 300 || $data['onload_loc_radius'] > 300){
+            return response()->json(['success' => false, 'message' => 'Параметр радиус должен быть больше 0 и меньше 300']);
+        }
+
         $upload_city_ids = [];
         $onload_city_ids = [];
+        $where_text =  '';
+        $where = [];
         if(isset($data['upload_loc_id'] )) {
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -98,6 +115,9 @@ class CompanyController extends Controller
                 foreach (json_decode($response) as $item){
                     $upload_city_ids[] = $item->CityId;
                 }
+                $upload_city_ids[] = (int) $data['upload_loc_id'];
+
+                $where[] = "g.upload_loc_id IN (".implode(",", $upload_city_ids).")";
             }
         }
         if(isset($data['onload_loc_id'] )) {
@@ -121,17 +141,50 @@ class CompanyController extends Controller
             if ($err) {
                 return response()->json(['success' => false, 'message' => 'Server error']);
             } else {
+//                dd(json_decode($response));
                 foreach (json_decode($response) as $item){
                     $onload_city_ids[] = $item->CityId;
                 }
+                $onload_city_ids[] = (int) $data['onload_loc_id'];
+                $where[] = "g.onload_loc_id IN (".implode(",", $onload_city_ids).")";
             }
         }
-
-
-        dd($upload_city_ids, $onload_city_ids);
-
-
-
+        if(isset($data['loading_type'])){
+            $where[] = "g.loading_type = '${data['loading_type']}'";
+        }
+        if(isset($data['min_deposit'])){
+            $where[] = "g.ruble_per_kg > '${data['min_deposit']}'";
+        }
+        if(isset($data['date_from'])){
+            $where[] = "g.loading_date >= '${data['date_from']}'";
+        }
+        if(isset($data['date_to'])){
+            $where[] = "g.loading_date <= '${data['date_to']}'";
+        }
+        if(!empty($where)){
+            $where_text = implode(' AND ', $where);
+        }
+        if(strlen($where_text) != 0){
+//            $sql = "SELECT * from `goods_orders` where ${where_text}";
+//            $sql = "SELECT * from `goods_orders` where ${where_text}";
+            $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+                            g.max_volume, g.payment_type, g.ruble_per_kg, g.phone_number, g.company_name, g.is_disabled, g.created_at,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
+                     JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
+                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                    where ${where_text}
+";
+        }else{
+            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+                            g.max_volume, g.payment_type, g.ruble_per_kg, g.phone_number, g.company_name, g.is_disabled, g.created_at,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
+                     JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
+                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+";
+        }
+        $aa = DB::select($sql);
+        return response()->json(['success' => true, 'orders' => $aa]);
+        dd($aa, $onload_city_ids, $sql);
 
 
         // Координаты города Анапы
