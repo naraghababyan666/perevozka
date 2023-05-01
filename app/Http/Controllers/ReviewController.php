@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ReviewController extends Controller
@@ -11,7 +12,6 @@ class ReviewController extends Controller
     public function create(Request $request)
     {
         $data = Validator::make($request->all(), [
-            'writer_id' => 'required|exists:companies',
             'company_id' => 'required|exists:companies',
             'review_text' => 'required',
         ]);
@@ -24,7 +24,7 @@ class ReviewController extends Controller
         }
 
         $review = new Review();
-        $review->writer_id = $data->validated()['writer_id'];
+        $review->writer_id = Auth::id();
         $review->company_id = $data->validated()['company_id'];
         $review->review_text = $data->validated()['review_text'];
         $review->save();
