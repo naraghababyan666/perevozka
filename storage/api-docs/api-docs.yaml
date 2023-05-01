@@ -86,6 +86,20 @@ paths:
           description: 'Successfully logged in'
       security:
         - bearerAuth: [ ]
+  /api/company/{id}:
+    get:
+      tags:
+        - Api's
+      description: "Get information about company by id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        200:
+          description: "Returns information"
+        404:
+          description: "Company not found"
   /api/makeDisabled/{id}:
     post:
       tags:
@@ -549,6 +563,20 @@ paths:
           description: 'Review successfully created'
         203:
           description: "Validation error"
+      security:
+        - bearerAuth: [ ]
+  /api/company-reviews/{id}:
+    get:
+      tags:
+        - Review
+      description: 'Get reviews by id'
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        200:
+          description: "Reviews list"
       security:
         - bearerAuth: [ ]
 

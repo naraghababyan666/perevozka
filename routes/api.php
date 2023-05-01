@@ -27,6 +27,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('city/{cityName}', [RegionController::class, 'filterCity']);
 Route::get('infoCity/{CityId}', [RegionController::class, 'getInfoCityById']);
+Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('find-company');
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::middleware('isOwner')->group(function (){
@@ -57,7 +58,6 @@ Route::middleware('auth:sanctum')->group(function (){
     });
     Route::get("user", [FavoritesController::class, 'user']);
     Route::post('makeDisabled/{id}', [SiteController::class, 'makeOrderDisable']);
-    Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('find-company');
     Route::get('company-reviews/{id}', [CompanyController::class, 'companyReviews']);
 });
 
