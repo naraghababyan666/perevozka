@@ -544,11 +544,6 @@ paths:
             schema:
               type: object
               properties:
-                writer_id:
-                  type: integer
-                  required: true
-                  example: 1
-                  description: 'Groxi id-n'
                 company_id:
                   type: integer
                   required: true
