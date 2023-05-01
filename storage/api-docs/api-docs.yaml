@@ -314,6 +314,63 @@ paths:
           description: "Validation error"
       security:
         - bearerAuth: [ ]
+  /api/getRides:
+    get:
+      tags:
+        - For OWNER
+      description: "Find rides with filter"
+      parameters:
+        - name: "upload_loc_id"
+          in: query
+          schema:
+            type: integer
+            example: 60979
+        - name: "upload_loc_radius"
+          in: query
+          schema:
+            type: integer
+            description: "1-150KM"
+            example: 1
+        - name: "onload_loc_id"
+          in: query
+          schema:
+            type: integer
+            example: 60979
+        - name: "onload_loc_radius"
+          in: query
+          schema:
+            type: integer
+            description: "1-150KM"
+            example: 1
+        - name: "loading_type"
+          in: query
+          schema:
+            type: string
+            description: "самосвал/трал/сцепка/сельхозник/тонар"
+            example: "самосвал"
+        - name: "date_from"
+          in: query
+          schema:
+            type: string
+            example: "2018-02-20 23:00:00"
+        - name: "date_to"
+          in: query
+          schema:
+            type: string
+            example: "2018-02-20 23:00:00"
+        - name: "min_deposit"
+          in: query
+          schema:
+            type: integer
+            example: 500
+      responses:
+        "200":
+          description: "Returns list"
+        "403":
+          description: "Forbidden Error"
+      security:
+        - bearerAuth: [ ]
+
   /api/getMyOrders:
     get:
       tags:
@@ -388,6 +445,77 @@ paths:
       responses:
         200:
           description: 'Successfully created'
+      security:
+        - bearerAuth: [ ]
+  /api/getOrders:
+    get:
+      tags:
+        - For DRIVER
+      description: "Find orders with filter"
+      parameters:
+        - name: "upload_loc_id"
+          in: query
+          schema:
+            type: integer
+            example: 60979
+        - name: "upload_loc_radius"
+          in: query
+          schema:
+            type: integer
+            description: "1-150KM"
+            example: 1
+        - name: "onload_loc_id"
+          in: query
+          schema:
+            type: integer
+            example: 60979
+        - name: "onload_loc_radius"
+          in: query
+          schema:
+            type: integer
+            description: "1-150KM"
+            example: 1
+        - name: "loading_type"
+          in: query
+          schema:
+            type: string
+            description: "самосвал/трал/сцепка/сельхозник/тонар"
+            example: "самосвал"
+        - name: "date_from"
+          in: query
+          schema:
+            type: string
+            example: "2018-02-20 23:00:00"
+        - name: "date_to"
+          in: query
+          schema:
+            type: string
+            example: "2018-02-20 23:00:00"
+        - name: "min_deposit"
+          in: query
+          schema:
+            type: integer
+            example: 500
+      responses:
+        "200":
+          description: "Returns list"
+        "403":
+          description: "Forbidden Error"
+      security:
+        - bearerAuth: [ ]
+  /api/delete-ride/{id}:
+    delete:
+      tags:
+        - For DRIVER
+      description: "Delete ride"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: "Ride id"
+      responses:
+        200:
+          description: 'Successfully deleted'
       security:
         - bearerAuth: [ ]
 
