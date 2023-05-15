@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\Favorites;
+use App\Models\Subscriptions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,12 +14,18 @@ use Illuminate\Support\Facades\Validator;
 class FavoritesController extends Controller
 {
     public function user(){
+
         $user = Auth::user();
         return response()->json(['user' => $user]);
 
     }
 
     public function getFavoritesList(){
+        $subscribed = 0;
+        $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
+        if(!is_null($data)){
+            $subscribed = 1;
+        }
         $favorites = Favorites::query()->where('company_id', Auth::id());
         if (Auth::user()['role_id'] == Company::IS_OWNER){
             $favorites->where('order_type', '=', 'ride')->with('rides')->get();
@@ -29,9 +37,15 @@ class FavoritesController extends Controller
         $favorites = $favorites->get();
         foreach ($favorites as $item){
             if(!is_null($item->rides)){
+                if($subscribed == 0){
+                    unset($item->rides['phone_number']);
+                }
                 $item->rides->upload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->rides->upload_loc_id));
                 $item->rides->onload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->rides->onload_loc_id));
             }else if(!is_null($item->goods)){
+                if($subscribed == 0){
+                    unset($item->rides['phone_number']);
+                }
                 $item->goods->upload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->goods->upload_loc_id));
                 $item->goods->onload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->goods->onload_loc_id));
             }

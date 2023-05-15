@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckSubscriptionMiddleware;
 use App\Http\Middleware\DriverMiddleware;
 use App\Http\Middleware\OwnerAndDriverMiddleware;
 use App\Http\Middleware\OwnerMiddleware;
@@ -66,8 +67,8 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'OwnerAndDriver' => OwnerAndDriverMiddleware::class,
         'isDriver' => DriverMiddleware::class,
-        'isOwner' => OwnerMiddleware::class
+        'isOwner' => OwnerMiddleware::class,
+        'isSubscribed' => CheckSubscriptionMiddleware::class,
     ];
 }
