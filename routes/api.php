@@ -11,6 +11,7 @@ use \App\Http\Controllers\ReviewController;
 use \App\Http\Controllers\GoodsOrdersController;
 use \App\Http\Controllers\RegionController;
 use \App\Http\Controllers\SubscriptionsController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,8 +49,14 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::delete('delete-ride/{id}', [CompanyController::class, 'deleteRide']);
 
     });
+    Route::middleware('isAdmin')->group(function (){
+        Route::get('confirm-review/{id}', [AdminController::class, 'confirmReview']);
+        Route::get('decline-review/{id}', [AdminController::class, 'declineReview']);
+        Route::get('review-list', [AdminController::class, 'reviewList']);
+    });
 
-    Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
+
+        Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
 
     Route::prefix('review')->group(function () {
         Route::post('/create', [ReviewController::class, 'create'])->name('create-review');

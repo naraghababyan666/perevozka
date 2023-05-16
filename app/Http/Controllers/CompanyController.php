@@ -45,10 +45,11 @@ class CompanyController extends Controller
 //    }
 
     public function companyReviews($id){
-        $reviews = Review::query()->where('company_id', $id)->with(['writer' => function ($query) {
-            $query->select('id', 'email', 'phone_number', 'company_name', 'legal_address');
-        }])->get();
-        return response()->json(['success' => true, 'reviews' => $reviews]);
+//        $reviews = Review::query()->where('company_id', $id)->where('is_published', 1)->with(['writer' => function ($query) {
+//            $query->select('id', 'email', 'phone_number', 'company_name', 'legal_address');
+//        }])->get();
+        $reviewsCount = Review::query()->where('company_id', $id)->where('is_published', Review::CONFIRMED)->count();
+        return response()->json(['success' => true, 'reviews_count' => $reviewsCount]);
     }
 
     public function createRide(\Illuminate\Http\Request $request){

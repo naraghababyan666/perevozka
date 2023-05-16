@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckSubscriptionMiddleware;
 use App\Http\Middleware\DriverMiddleware;
 use App\Http\Middleware\OwnerAndDriverMiddleware;
@@ -70,5 +71,6 @@ class Kernel extends HttpKernel
         'isDriver' => DriverMiddleware::class,
         'isOwner' => OwnerMiddleware::class,
         'isSubscribed' => CheckSubscriptionMiddleware::class,
+        'isAdmin' => AdminMiddleware::class
     ];
 }

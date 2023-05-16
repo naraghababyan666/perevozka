@@ -22,6 +22,8 @@ class Company extends Authenticatable
     public const IS_OWNER = 1;
     public const IS_DRIVER = 2;
     public const IS_OWNER_AND_DRIVER = 3;
+    public const IS_ADMIN = 4;
+
     protected $hidden = [
         'password'
     ];
