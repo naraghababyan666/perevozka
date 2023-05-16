@@ -575,6 +575,47 @@ paths:
       security:
         - bearerAuth: [ ]
 
+  /api/confirm-review/{id}:
+    get:
+      tags:
+        - Admin
+      description: 'Confirm review written by user'
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        200:
+          description: "Returns true"
+      security:
+        - bearerAuth: [ ]
+
+  /api/decline-review/{id}:
+    get:
+      tags:
+        - Admin
+      description: 'Decline review written by user '
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        200:
+          description: "Returns true"
+      security:
+        - bearerAuth: [ ]
+  /api/review-list:
+    get:
+      tags:
+        - Admin
+      description: 'Returns reviews list | Review status 0 = default, status 1 = DECLINED, status 2 = CONFIRMED'
+      responses:
+        200:
+          description: "Returns reviews list"
+      security:
+        - bearerAuth: [ ]
+
+
 components:
   schemas:
     Company:
