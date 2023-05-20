@@ -119,7 +119,7 @@ class CompanyController extends Controller
     }
 
     public function deleteRide($id){
-        RideOrders::query()->find($id)->delete();
+        RideOrders::query()->findOrFail($id)->delete();
         return response()->json(['success' => true, 'message' => 'Race successfully deleted']);
     }
 
