@@ -44,7 +44,7 @@ class FavoritesController extends Controller
                 $item->rides->onload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->rides->onload_loc_id));
             }else if(!is_null($item->goods)){
                 if($subscribed == 0){
-                    unset($item->rides['phone_number']);
+                    unset($item->goods['phone_number']);
                 }
                 $item->goods->upload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->goods->upload_loc_id));
                 $item->goods->onload_city_name = ((new \App\Models\RussiaRegions)->getCityNameById($item->goods->onload_loc_id));

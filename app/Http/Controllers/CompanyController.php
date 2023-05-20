@@ -52,6 +52,25 @@ class CompanyController extends Controller
         return response()->json(['success' => true, 'reviews_count' => $reviewsCount]);
     }
 
+    public function companyList(\Illuminate\Http\Request $request){
+        $data = $request->all();
+        $companies = [];
+        if(Auth::user()['role_id'] == Company::IS_OWNER){
+            $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
+                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
+                WHERE c.role_id = 2";
+        }else if (Auth::user()['role_id'] == Company::IS_DRIVER){
+            $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
+                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
+                WHERE c.role_id = 1";
+        }else{
+            $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
+                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c";
+        }
+        $data = DB::select($sql);
+        return response()->json(['data' => $data]);
+    }
+
     public function createRide(\Illuminate\Http\Request $request){
         if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER || Auth::user()['role_id'] == Company::IS_DRIVER){
             $validator = Validator::make($request->all(), [
@@ -215,6 +234,7 @@ class CompanyController extends Controller
 
         return response()->json(['success' => true, 'orders' => $aa]);
     }
+
     public function getOrders(\Illuminate\Http\Request $request){
         //upload_loc_id
         //upload_loc_radius

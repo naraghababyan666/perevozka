@@ -55,8 +55,8 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::get('review-list', [AdminController::class, 'reviewList']);
     });
 
-
-        Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
+    Route::post('/companies', [CompanyController::class, 'companyList'])->middleware('isSubscribed');
+    Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
 
     Route::prefix('review')->group(function () {
         Route::post('/create', [ReviewController::class, 'create'])->name('create-review');

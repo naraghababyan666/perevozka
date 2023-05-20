@@ -86,6 +86,16 @@ paths:
           description: 'Successfully logged in'
       security:
         - bearerAuth: [ ]
+  /api/companies:
+    post:
+      tags:
+        - Api's
+      description: "Companies list"
+      responses:
+        200:
+          description: "Companies list"
+      security:
+        - bearerAuth: [ ]
   /api/company/{id}:
     get:
       tags:
