@@ -11,6 +11,7 @@ class SiteController extends Controller
         $goodsOrder = GoodsOrders::query()->find($id);
         if(!is_null($goodsOrder)){
             $goodsOrder->is_disabled = 1;
+            $goodsOrder->save();
             return response()->json(['success' => true, 'message' => 'Order get']);
         }
         return response()->json(['success' => false, 'message' => 'Order not found'], 404);

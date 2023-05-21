@@ -59,13 +59,22 @@ class CompanyController extends Controller
             $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
                 c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
                 WHERE c.role_id = 2";
+            if (!empty($data['searchValue'])) {
+                $sql .= " AND c.company_name LIKE '%${data['searchValue']}%'";
+            }
         }else if (Auth::user()['role_id'] == Company::IS_DRIVER){
             $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
                 c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
                 WHERE c.role_id = 1";
+            if (!empty($data['searchValue'])) {
+                $sql .= " AND c.company_name LIKE '%${data['searchValue']}%'";
+            }
         }else{
             $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
                 c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c";
+            if (!empty($data['searchValue'])) {
+                $sql .= " WHERE c.company_name LIKE '%${data['searchValue']}%'";
+            }
         }
         $data = DB::select($sql);
         return response()->json(['data' => $data]);
