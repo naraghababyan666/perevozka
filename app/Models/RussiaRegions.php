@@ -13,7 +13,7 @@ class RussiaRegions extends Model
 
     protected $fillable = ['Id2', 'CityId','RegionId','CountryId','FullName','CitySize','Longitude','Latitude','CityName','CityNameEng'];
 
-    protected $appends = ['upload_city_name', 'onload_city_name'];
+//    protected $appends = ['upload_city_name', 'onload_city_name'];
 
     public function getUploadCityNameAttribute($id){
         $city = self::find($id);
