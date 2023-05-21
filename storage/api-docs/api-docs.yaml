@@ -87,10 +87,15 @@ paths:
       security:
         - bearerAuth: [ ]
   /api/companies:
-    post:
+    get:
       tags:
         - Api's
       description: "Companies list"
+      parameters:
+        - in: query
+          name: searchValue
+          required: false
+
       responses:
         200:
           description: "Companies list"
