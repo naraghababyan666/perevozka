@@ -111,19 +111,36 @@ class CompanyController extends Controller
     }
 
     public function getMyOrders(){
-        $orders = GoodsOrders::query()->where('company_id', Auth::id())->get();
-        foreach ($orders as $order){
-            $order['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['upload_loc_id']));
-            $order['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['onload_loc_id']));
-        }
+//        $orders = GoodsOrders::query()->where('company_id', Auth::id())->get();
+//        foreach ($orders as $order){
+//            $order['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['upload_loc_id']));
+//            $order['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['onload_loc_id']));
+//        }
+        $userID = Auth::id();
+        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, g.created_at,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
+                 from `goods_orders` as g
+                 JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
+                 JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                WHERE `company_id` = '${userID}';
+                ";
+        $orders = DB::select($sql);
         return response()->json(['success' => true, 'data' => $orders]);
     }
     public function getMyRides(){
-        $rides = RideOrders::query()->where('company_id', Auth::id())->get();
-        foreach ($rides as $ride){
-            $ride['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['upload_loc_id']));
-            $ride['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['onload_loc_id']));
-        }
+//        $rides = RideOrders::query()->where('company_id', Auth::id())->get();
+//        foreach ($rides as $ride){
+//            $ride['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['upload_loc_id']));
+//            $ride['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['onload_loc_id']));
+//        }
+        $userID = Auth::id();
+        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, g.created_at,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
+                     JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
+                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId";
+        $rides = DB::select($sql);
         return response()->json(['success' => true, 'data' => $rides]);
     }
 
