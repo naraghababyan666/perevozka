@@ -53,9 +53,6 @@ paths:
                 logo_url:
                   required: false
                   type: string
-                favorites:
-                  required: false
-                  type: string
       responses:
         200:
           description: 'Company successfully created'
