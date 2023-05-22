@@ -17,7 +17,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()['role_id'] == Company::IS_ADMIN){
+        if(Auth::user()['is_admin'] == 1){
             return $next($request);
         }
         return response()->json(['success' => false, 'message' => 'Permission denied'], 403);

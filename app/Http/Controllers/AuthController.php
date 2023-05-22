@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'company_name' => $request['company_name'],
                 'legal_address' => $request['legal_address'],
                 'postal_address' => $request["postal_address"],
-                'role_id' => $request['role_id']
+                'role_id' => $request['role_id'],
             ]);
             if (isset($request["inn"])) {
                 $newCompany->inn = $request["inn"];
