@@ -46,8 +46,8 @@ class FavoritesController extends Controller
             $result['ride'] = DB::select($sql);
 
         }else if(Auth::user()['role_id'] == Company::IS_DRIVER){
-            $goods = json_decode($user['favorite_goods']);
-            if(!is_null($goods)){
+            if(!is_null($user['favorite_goods'])){
+                $goods = json_decode($user['favorite_goods']);
                 $goodsStr = implode(",", $goods);
             }else{
                 $goodsStr = [];
