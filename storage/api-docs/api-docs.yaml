@@ -169,28 +169,44 @@ paths:
       security:
         - bearerAuth: [ ]
 
-  /api/favorite/add:
+  /api/favorite/add-ride:
     post:
       tags:
         - Favorites
-      description: "Add order in favorite list"
+      description: "Add Ride in favorite list"
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                order_id:
+                ride_id:
                   type: integer
                   required: true
                   example: 1
-                order_type:
-                  type: string
-                  required: true
-                  example: "good"
       responses:
         200:
-          description: 'Successfully logged in'
+          description: 'Successfully added'
+      security:
+        - bearerAuth: [ ]
+  /api/favorite/add-goods:
+    post:
+      tags:
+        - Favorites
+      description: "Add Goods in favorite list"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                goods_id:
+                  type: integer
+                  required: true
+                  example: 1
+      responses:
+        200:
+          description: 'Successfully added'
       security:
         - bearerAuth: [ ]
   /api/favorite/delete:
