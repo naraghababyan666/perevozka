@@ -28,6 +28,10 @@ class FavoritesController extends Controller
         }
         $user = Auth::user();
         $result = [];
+        if(is_null($user['favorite_ride']) || is_null($user['favorite_goods'])){
+            $user['favorite_ride'] = [];
+            $user['favorite_goods'] = [];
+        }
         if(Auth::user()['role_id'] == Company::IS_OWNER){
             $ride = json_decode($user['favorite_ride']);
             $rideStr = implode(",", $ride);
