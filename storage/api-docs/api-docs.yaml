@@ -254,18 +254,14 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                FullName:
                   type: string
                   required: true
-                  example: "garegin@gmail.cos"
-                first_name:
+                  example: "Vardan Ghukasyan"
+                phone_number:
                   type: string
                   required: true
-                  example: "Pavel"
-                last_name:
-                  type: string
-                  required: true
-                  example: "Pavleashvili"
+                  example: "+79855522145"
       responses:
         200:
           description: 'Successfully created'
@@ -486,6 +482,10 @@ paths:
                   type: integer
                   required: true
                   example: "96892"
+                order_title:
+                  type: string
+                  required: true
+                  example: "Lvacqi meqena"
                 kuzov_type:
                   type: string
                   required: true
@@ -496,10 +496,14 @@ paths:
                   required: true
                   example: "элеватор"
                   description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
-                loading_date:
+                start_date:
                   type: string
                   required: true
                   example: "2023-04-18 00:01:33"
+                end_date:
+                  type: string
+                  required: true
+                  example: "2023-05-18 00:01:33"
                 max_weight:
                   type: integer
                   required: true
@@ -514,7 +518,17 @@ paths:
                   type: string
                   required: true
                   example: "налич"
-                  description: "Тип оплаты ( нал/безнал, с НДС/без НДС, с предоплатой)"
+                  description: "Тип оплаты ( нал/безнал )"
+                payment_nds:
+                  type: string
+                  required: true
+                  example: "с НДС"
+                  description: "Тип оплаты ( с НДС/без НДС )"
+                prepaid:
+                  type: string
+                  required: true
+                  example: '0'
+                  description: 'с предоплатой'
                 ruble_per_kg:
                   type: integer
                   required: true
@@ -528,6 +542,24 @@ paths:
                   type: string
                   required: true
                   example: "Hanrayin dzayn"
+                description:
+                  type: string
+                  required: true
+                  example: "description about order"
+                manager_id:
+                  type: integer
+                  required: true
+                  example: 1
+                material_type:
+                  type: string
+                  required: true
+                  example: "зерновые"
+                  description: "инертные материалы, зерновые"
+                material_info:
+                  type: string
+                  required: true
+                  example: "кукуруза"
+                  description: "пшеница, ячмень, кукуруза, горох, рапс, рис, семечка,"
       responses:
         200:
           description: 'Successfully created'
