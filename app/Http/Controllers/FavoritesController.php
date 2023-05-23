@@ -28,14 +28,21 @@ class FavoritesController extends Controller
         }
         $user = Auth::user();
         $result = [];
-        if(is_null($user['favorite_ride']) || is_null($user['favorite_goods'])){
-            $user['favorite_ride'] = [];
-            $user['favorite_goods'] = [];
-        }
+//        if(is_null($user['favorite_ride'])){
+//            $user['favorite_ride'] = [];
+//        }else if(is_null($user['favorite_goods'])){
+//            $user['favorite_goods'] = [];
+//
+//        }
         if(Auth::user()['role_id'] == Company::IS_OWNER){
-            $ride = json_decode($user['favorite_ride']);
-            $rideStr = implode(",", $ride);
-            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+            $ride = $user['favorite_ride'];
+            if(!is_null($user['favorite_ride'])){
+                $rideStr = implode(",", json_decode($ride));
+            }else{
+                $rideStr = [];
+            }
+            if(!is_null($ride)){
+                $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
                             g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `ride_orders` as g
@@ -43,31 +50,55 @@ class FavoritesController extends Controller
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                 WHERE `company_id` = '${user['id']}' AND g.id IN (${rideStr});
                 ";
-            $result['ride'] = DB::select($sql);
+                $result['ride'] = DB::select($sql);
+
+            }
 
         }else if(Auth::user()['role_id'] == Company::IS_DRIVER){
+            $goods = $user['favorite_goods'];
             if(!is_null($user['favorite_goods'])){
-                $goods = json_decode($user['favorite_goods']);
-                $goodsStr = implode(",", $goods);
+                $goodsStr = implode(",", json_decode($goods));
             }else{
                 $goodsStr = [];
             }
-            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+            if(!is_null($goods)){
+                $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
                             g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${user['id']}' AND g.id IN (${goodsStr});
+                WHERE `company_id` = '${user['id']}' AND `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
                 ";
-            $result['goods'] = DB::select($sql);
+                $result['goods'] = DB::select($sql);
+            }
+
         }else if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER){
             $goods = json_decode($user['favorite_goods']);
             $ride = json_decode($user['favorite_ride']);
-
-            $ride = json_decode($user['favorite_ride']);
-            $rideStr = implode(",", $ride);
-            $sqlRide =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+            if(!is_null($user['favorite_ride'])){
+                $rideStr = implode(",", ($ride));
+            }else{
+                $rideStr = [];
+            }
+            if(!is_null($user['favorite_goods'])){
+                $goodsStr = implode(",", ($goods));
+            }else{
+                $goodsStr = [];
+            }
+            if(!is_null($goods)){
+                $sqlGoods =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
+                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
+                 from `goods_orders` as g
+                 JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
+                 JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                WHERE `company_id` = '${user['id']}' AND `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
+                ";
+                $result['goods'] = DB::select($sqlGoods);
+            }
+            if(!is_null($ride)){
+                $sqlRide =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
                             g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `ride_orders` as g
@@ -75,22 +106,14 @@ class FavoritesController extends Controller
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                 WHERE `company_id` = '${user['id']}' AND g.id IN (${rideStr});
                 ";
+                $result['ride'] = DB::select($sqlRide);
 
-            $goods = json_decode($user['favorite_goods']);
-            $goodsStr = implode(",", $goods);
-            $sqlGoods =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
-                 from `goods_orders` as g
-                 JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
-                 JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${user['id']}' AND g.id IN (${goodsStr});
-                ";
+            }
 
-            $rideList = DB::select($sqlRide);
-            $goodsList = DB::select($sqlGoods);
-            $result['ride'][] = $rideList;
-            $result['goods'][] = $goodsList;
+//            $rideList = DB::select($sqlRide);
+//            $goodsList = DB::select($sqlGoods);
+//            $result['ride'][] = $rideList;
+//            $result['goods'][] = $goodsList;
 
         }
         return response()->json(['success' => true, 'list' => $result]);
