@@ -41,4 +41,11 @@ class ManagerController extends Controller
         return response()->json(['success' => true, 'message' => 'Manager successfully deleted']);
 
     }
+
+    public function getMyManagersList(){
+        $userID = Auth::id();
+        $list = Manager::query()->where('company_id', $userID)->get();
+        return response()->json(['success' => true, 'managers' => $list]);
+
+    }
 }
