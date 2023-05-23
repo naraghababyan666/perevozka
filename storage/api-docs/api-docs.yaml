@@ -283,7 +283,16 @@ paths:
           description: 'Successfully logged in'
       security:
         - bearerAuth: [ ]
-
+  /api/manager/list:
+    get:
+      tags:
+        - Manager
+      description: 'Managers list'
+      responses:
+        200:
+          description: 'List managers'
+      security:
+        - bearerAuth: [ ]
   /api/createOrder:
     post:
       tags:
