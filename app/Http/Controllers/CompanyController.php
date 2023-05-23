@@ -255,7 +255,7 @@ class CompanyController extends Controller
             $where[] = "g.material_type LIKE '%${data['material_type']}%'";
         }
         if(isset($data['material_info'])){
-            $where[] = "g.material_type LIKE '%${data['material_info']}%'";
+            $where[] = "g.material_info LIKE '%${data['material_info']}%'";
         }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
