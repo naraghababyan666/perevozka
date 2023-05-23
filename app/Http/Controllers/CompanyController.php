@@ -110,7 +110,10 @@ class CompanyController extends Controller
             }
             $data = $validator->validated();
             $data['company_id'] = Auth::id();
-            RideOrders::query()->create($request->all());
+            if(isset($request['phone_number'])){
+                $data['phone_number'] = $request['phone_number'];
+            }
+            RideOrders::query()->create($data);
             $lastRide = RideOrders::query()->orderBy('created_at', "DESC")->first();
             return response()->json(['success' => true, 'data' => $lastRide] );
         }else{
