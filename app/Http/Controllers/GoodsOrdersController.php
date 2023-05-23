@@ -43,9 +43,9 @@ class GoodsOrdersController extends Controller
         $goods_orders = new GoodsOrders();
         $goods_orders->company_id = Auth::id();
         $goods_orders->upload_loc_id = $validator->validated()['upload_loc_id'];
-        $goods_orders->upload_loc_info = $validator->validated()['upload_loc_info'];
+        $goods_orders->upload_loc_info = $request->all()['upload_loc_info'] ?? null;
         $goods_orders->onload_loc_id = $validator->validated()['onload_loc_id'];
-        $goods_orders->onload_loc_info = $validator->validated()['onload_loc_info'];
+        $goods_orders->onload_loc_info = $request->all()['onload_loc_info'] ?? null;
         $goods_orders->order_title = $validator->validated()['order_title'];
         $goods_orders->kuzov_type = $validator->validated()['kuzov_type'];
         $goods_orders->loading_type = $validator->validated()['loading_type'];
@@ -57,7 +57,7 @@ class GoodsOrdersController extends Controller
         $goods_orders->payment_nds = $validator->validated()['payment_nds'];
         $goods_orders->prepaid = $validator->validated()['prepaid'];
         $goods_orders->ruble_per_kg = $validator->validated()['ruble_per_kg'];
-        $goods_orders->phone_number = $validator->validated()['phone_number'];
+        $goods_orders->phone_number = $request->all()['phone_number'] ?? null;
         $goods_orders->company_name = $validator->validated()['company_name'];
         $goods_orders->description = $validator->validated()['description'];
         $goods_orders->manager_id = $validator->validated()['manager_id'];
