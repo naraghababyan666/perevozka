@@ -38,11 +38,12 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::get('getMyOrders', [CompanyController::class, 'getMyOrders']);
 
     });
+
+    Route::prefix('manager')->group(function () {
+        Route::post('create', [ManagerController::class, 'create'])->name('create-manager');
+        Route::post('delete/{id}', [ManagerController::class, 'delete'])->name('delete-manager');
+    });
     Route::middleware('isDriver')->group(function (){
-        Route::prefix('manager')->group(function () {
-            Route::post('create', [ManagerController::class, 'create'])->name('create-manager');
-            Route::post('delete/{id}', [ManagerController::class, 'delete'])->name('delete-manager');
-        });
         Route::post('create-ride', [CompanyController::class, 'createRide'])->name('create-ride');
         Route::get('getOrders', [CompanyController::class, 'getOrders'])->middleware('isSubscribed');
         Route::get('getMyRides', [CompanyController::class, 'getMyRides']);
