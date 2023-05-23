@@ -14,9 +14,7 @@ class GoodsOrdersController extends Controller
 
         $validator = Validator::make($request->all(), [
             'upload_loc_id' => 'required',
-            'upload_loc_info' => 'required',
             'onload_loc_id' => 'required',
-            'onload_loc_info' => 'required',
             'order_title' => 'required',
             'kuzov_type' => 'required',
             'loading_type' => 'required',
@@ -28,7 +26,6 @@ class GoodsOrdersController extends Controller
             'payment_nds' => 'required',
             'prepaid' => 'required',
             'ruble_per_kg' => 'required',
-            'phone_number' => 'required',
             'company_name' => 'required',
             'description' => 'required',
             'manager_id' => 'required',

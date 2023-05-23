@@ -96,7 +96,6 @@ class CompanyController extends Controller
                 'payment_nds' => 'required',
                 'prepaid' => 'required',
                 'ruble_per_kg' => 'required',
-                'phone_number' => 'required',
                 'company_name' => 'required',
                 'description' => 'required',
                 'manager_id' => 'required',
@@ -111,7 +110,7 @@ class CompanyController extends Controller
             }
             $data = $validator->validated();
             $data['company_id'] = Auth::id();
-            RideOrders::query()->create($data);
+            RideOrders::query()->create($request->all());
             $lastRide = RideOrders::query()->orderBy('created_at', "DESC")->first();
             return response()->json(['success' => true, 'data' => $lastRide] );
         }else{
