@@ -41,7 +41,6 @@ class FavoritesController extends Controller
             }else{
                 $rideStr = [];
             }
-            dd($rideStr);
             if(!is_null($ride)){
 
                 $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
