@@ -85,14 +85,23 @@ class CompanyController extends Controller
             $validator = Validator::make($request->all(), [
                 'upload_loc_id' => 'required',
                 'onload_loc_id' => 'required',
+                'order_title' => 'required',
                 'kuzov_type' => 'required',
                 'loading_type' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
                 'max_weight' => 'required',
                 'max_volume' => 'required',
                 'payment_type' => 'required',
+                'payment_nds' => 'required',
+                'prepaid' => 'required',
                 'ruble_per_kg' => 'required',
                 'phone_number' => 'required',
                 'company_name' => 'required',
+                'description' => 'required',
+                'manager_id' => 'required',
+                'material_type' => 'required',
+                'material_info' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -117,9 +126,10 @@ class CompanyController extends Controller
 //            $order['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['onload_loc_id']));
 //        }
         $userID = Auth::id();
-        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, g.created_at,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
+        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_loc_info, g.onload_loc_id,g.onload_loc_info, g.order_title, g.kuzov_type,
+                        g.loading_type, g.start_date, g.end_date, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
+                        g.company_name, g.is_disabled, g.created_at,g.description,g.manager_id,g.material_type,g.material_info,
+                        upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
@@ -135,9 +145,10 @@ class CompanyController extends Controller
 //            $ride['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['onload_loc_id']));
 //        }
         $userID = Auth::id();
-        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, g.created_at,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
+        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type,
+                        g.loading_type, g.start_date, g.end_date, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
+                        g.company_name,g.phone_number, g.is_disabled, g.created_at,g.description,g.manager_id,g.material_type,g.material_info,
+                        upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId";
         $rides = DB::select($sql);

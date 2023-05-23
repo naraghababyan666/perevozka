@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Manager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ManagerController extends Controller
 {
     public function create(Request $request){
         $data = Validator::make($request->all(), [
-            'email' => "required",
-            'first_name' => 'required',
-            'last_name' => 'required'
+            'FullName' => 'required',
+            'phone_number' => 'required'
         ]);
         if ($data->fails()) {
             return response()->json([
@@ -21,17 +21,14 @@ class ManagerController extends Controller
                 "errors" => $data->errors()
             ])->header('Status-Code', 200);
         }
-        if(!Company::query()->where('email', $data->validated()['email'])->exists()){
-            return response()->json(['success' => false, 'message' => 'Email not found']);
+        if(Company::query()->where('phone_number', $data->validated()['phone_number'])->exists()){
+            return response()->json(['success' => false, 'message' => 'Phone number is exists']);
         }
 
         $manager = new Manager();
-        $manager->company_id = $data->validated()['company_id'];
-        $manager->first_name = $data->validated()['first_name'];
-        $manager->last_name = $data->validated()['last_name'];
-        if(isset($request->all()['phone_number'])){
-            $manager->phone_number = $data->validated()['phone_number'];
-        }
+        $manager->company_id = Auth::id();
+        $manager->FullName = $data->validated()['FullName'];
+        $manager->phone_number = $data->validated()['phone_number'];
         $manager->save();
         $lastManager = Manager::query()->find($manager->id);
 
