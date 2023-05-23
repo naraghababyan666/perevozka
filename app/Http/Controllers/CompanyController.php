@@ -248,7 +248,7 @@ class CompanyController extends Controller
         if(isset($data['date_from']) && isset($data['date_to'])){
             $where[] = "g.start_date >= '${data['date_from']}'";
             $where[] = "g.end_date <= '${data['date_to']}'";
-        }else{
+        }else if(isset($data['date_from'])){
             $where[] = "g.start_date >= '${data['date_from']}'";
         }
         if(isset($data['material_type'])){
