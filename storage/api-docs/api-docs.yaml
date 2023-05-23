@@ -574,6 +574,18 @@ paths:
           description: 'Successfully created'
       security:
         - bearerAuth: [ ]
+  /api/getMyRides:
+    get:
+      tags:
+        - For DRIVER
+      description: 'Returns my rides list'
+      responses:
+        "200":
+          description: "Returns list"
+        "403":
+          description: "Forbidden Error"
+      security:
+        - bearerAuth: [ ]
   /api/getOrders:
     get:
       tags:
