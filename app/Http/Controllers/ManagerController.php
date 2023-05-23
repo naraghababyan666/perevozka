@@ -21,7 +21,7 @@ class ManagerController extends Controller
                 "errors" => $data->errors()
             ])->header('Status-Code', 200);
         }
-        if(Company::query()->where('phone_number', $data->validated()['phone_number'])->exists()){
+        if(Manager::query()->where('phone_number', $data->validated()['phone_number'])->exists()){
             return response()->json(['success' => false, 'message' => 'Phone number is exists']);
         }
 
