@@ -133,7 +133,7 @@ class CompanyController extends Controller
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE g.company_id = '${userID}';
+                WHERE `company_id` = '${userID}';
                 ";
         $orders = DB::select($sql);
 //        $orders = GoodsOrders::query()->where('company_id', $userID)->get();
