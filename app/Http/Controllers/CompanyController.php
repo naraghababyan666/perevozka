@@ -271,6 +271,7 @@ class CompanyController extends Controller
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                     where ${where_text}";
+            dd($sql);
         }else{
             $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, g.phone_number, NULL) AS phone_number,
@@ -279,6 +280,7 @@ class CompanyController extends Controller
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId";
         }
+        dd($sql);
         $aa = DB::select($sql);
 
         return response()->json(['success' => true, 'orders' => $aa]);
