@@ -245,11 +245,17 @@ class CompanyController extends Controller
         if(isset($data['min_deposit'])){
             $where[] = "g.ruble_per_kg > '${data['min_deposit']}'";
         }
-        if(isset($data['date_from'])){
-            $where[] = "g.loading_date >= '${data['date_from']}'";
+        if(isset($data['date_from']) && isset($data['date_to'])){
+            $where[] = "g.start_date >= '${data['date_from']}'";
+            $where[] = "g.end_date <= '${data['date_to']}'";
+        }else{
+            $where[] = "g.start_date >= '${data['date_from']}'";
         }
-        if(isset($data['date_to'])){
-            $where[] = "g.loading_date <= '${data['date_to']}'";
+        if(isset($data['material_type'])){
+            $where[] = "g.material_type LIKE '%${data['material_type']}%'";
+        }
+        if(isset($data['material_info'])){
+            $where[] = "g.material_type LIKE '%${data['material_info']}%'";
         }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
