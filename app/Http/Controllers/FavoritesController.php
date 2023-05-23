@@ -48,7 +48,7 @@ class FavoritesController extends Controller
                  from `ride_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${user['id']}' AND g.id IN (${rideStr});
+                WHERE `is_disabled` = '0' AND g.id IN (${rideStr});
                 ";
                 $result['ride'] = DB::select($sql);
 
@@ -68,7 +68,7 @@ class FavoritesController extends Controller
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${user['id']}' AND `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
+                WHERE `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
                 ";
                 $result['goods'] = DB::select($sql);
             }
@@ -93,7 +93,7 @@ class FavoritesController extends Controller
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${user['id']}' AND `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
+                WHERE `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
                 ";
                 $result['goods'] = DB::select($sqlGoods);
             }
@@ -104,7 +104,7 @@ class FavoritesController extends Controller
                  from `ride_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${user['id']}' AND g.id IN (${rideStr});
+                WHERE `is_disabled` = '0' AND g.id IN (${rideStr});
                 ";
                 $result['ride'] = DB::select($sqlRide);
 
