@@ -41,7 +41,9 @@ class FavoritesController extends Controller
             }else{
                 $rideStr = [];
             }
+            dd($rideStr);
             if(!is_null($ride)){
+
                 $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
                             g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
