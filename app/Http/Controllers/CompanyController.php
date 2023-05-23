@@ -128,14 +128,15 @@ class CompanyController extends Controller
         $userID = Auth::id();
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_loc_info, g.onload_loc_id,g.onload_loc_info, g.order_title, g.kuzov_type,
                         g.loading_type, g.start_date, g.end_date, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
-                        g.company_name, g.is_disabled, g.created_at,g.description,g.manager_id,g.material_type,g.material_info,
+                        g.company_name, g.is_disabled, g.created_at,g.description,g.material_type,g.material_info,
                         upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `company_id` = '${userID}';
+                WHERE g.company_id = '${userID}';
                 ";
         $orders = DB::select($sql);
+//        $orders = GoodsOrders::query()->where('company_id', $userID)->get();
         return response()->json(['success' => true, 'data' => $orders]);
     }
     public function getMyRides(){

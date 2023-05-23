@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('CountryId')->nullable();
             $table->string('FullName')->nullable();
             $table->integer('CitySize')->nullable();
-            $table->decimal('Longitude', 10,7);
-            $table->decimal('Latitude', 10,7);
+            $table->decimal('Longitude', 10,7)->nullable();
+            $table->decimal('Latitude', 10,7)->nullable();
             $table->string('CityName')->nullable();
             $table->string('CityNameEng')->nullable();
         });
