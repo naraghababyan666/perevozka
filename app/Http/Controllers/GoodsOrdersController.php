@@ -57,7 +57,6 @@ class GoodsOrdersController extends Controller
         $goods_orders->payment_nds = $validator->validated()['payment_nds'];
         $goods_orders->prepaid = $validator->validated()['prepaid'];
         $goods_orders->ruble_per_kg = $validator->validated()['ruble_per_kg'];
-        $goods_orders->phone_number = $request->all()['phone_number'] ?? null;
         $goods_orders->company_name = $validator->validated()['company_name'];
         $goods_orders->description = $validator->validated()['description'];
         $goods_orders->manager_id = $validator->validated()['manager_id'];
