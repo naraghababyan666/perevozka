@@ -154,7 +154,7 @@ class CompanyController extends Controller
                         upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                     JOIN managers managers ON g.manager_id = managers.id WHERE `company_id` = '${userID}'";
+                     JOIN managers managers ON g.manager_id = managers.id WHERE g.company_id = '${userID}'";
         $rides = DB::select($sql);
         return response()->json(['success' => true, 'data' => $rides]);
     }
