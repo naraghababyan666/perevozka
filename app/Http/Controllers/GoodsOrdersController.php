@@ -27,7 +27,6 @@ class GoodsOrdersController extends Controller
             'prepaid' => 'required',
             'ruble_per_kg' => 'required',
             'company_name' => 'required',
-            'description' => 'required',
             'manager_id' => 'required',
             'material_type' => 'required',
             'material_info' => 'required',
@@ -58,7 +57,7 @@ class GoodsOrdersController extends Controller
         $goods_orders->prepaid = $validator->validated()['prepaid'];
         $goods_orders->ruble_per_kg = $validator->validated()['ruble_per_kg'];
         $goods_orders->company_name = $validator->validated()['company_name'];
-        $goods_orders->description = $validator->validated()['description'];
+        $goods_orders->description = $request->all()['description'] ?? null;
         $goods_orders->manager_id = $validator->validated()['manager_id'];
         $goods_orders->material_type = $validator->validated()['material_type'];
         $goods_orders->material_info = $validator->validated()['material_info'];

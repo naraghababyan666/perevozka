@@ -88,8 +88,6 @@ class CompanyController extends Controller
                 'order_title' => 'required',
                 'kuzov_type' => 'required',
                 'loading_type' => 'required',
-                'start_date' => 'required',
-                'end_date' => 'required',
                 'max_weight' => 'required',
                 'max_volume' => 'required',
                 'payment_type' => 'required',
@@ -97,7 +95,6 @@ class CompanyController extends Controller
                 'prepaid' => 'required',
                 'ruble_per_kg' => 'required',
                 'company_name' => 'required',
-                'description' => 'required',
                 'manager_id' => 'required',
                 'material_type' => 'required',
                 'material_info' => 'required',
@@ -110,6 +107,7 @@ class CompanyController extends Controller
             }
             $data = $validator->validated();
             $data['company_id'] = Auth::id();
+            $data['description'] = $request->all()['description'] ?? null;
             RideOrders::query()->create($data);
             $lastRide = RideOrders::query()->orderBy('created_at', "DESC")->first();
             return response()->json(['success' => true, 'data' => $lastRide] );
@@ -137,7 +135,7 @@ class CompanyController extends Controller
     public function getMyRides(){
         $userID = Auth::id();
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type,
-                        g.loading_type, g.start_date, g.end_date, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
+                        g.loading_type, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
                         g.company_name, g.is_disabled, g.created_at,g.description,g.manager_id,g.material_type,g.material_info,
                         managers.phone_number AS manager_phone_number, managers.FullName AS manager_name,
                         upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
@@ -235,12 +233,12 @@ class CompanyController extends Controller
         if(isset($data['min_deposit'])){
             $where[] = "g.ruble_per_kg > '${data['min_deposit']}'";
         }
-        if(isset($data['date_from']) && isset($data['date_to'])){
-            $where[] = "g.start_date >= '${data['date_from']}'";
-            $where[] = "g.end_date <= '${data['date_to']}'";
-        }else if(isset($data['date_from'])){
-            $where[] = "g.start_date >= '${data['date_from']}'";
-        }
+//        if(isset($data['date_from']) && isset($data['date_to'])){
+//            $where[] = "g.start_date >= '${data['date_from']}'";
+//            $where[] = "g.end_date <= '${data['date_to']}'";
+//        }else if(isset($data['date_from'])){
+//            $where[] = "g.start_date >= '${data['date_from']}'";
+//        }
         if(isset($data['material_type'])){
             $where[] = "g.material_type LIKE '%${data['material_type']}%'";
         }
@@ -253,7 +251,7 @@ class CompanyController extends Controller
         if(strlen($where_text) != 0){
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
-            $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+            $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type,
                             g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
@@ -264,7 +262,7 @@ class CompanyController extends Controller
                     JOIN managers managers ON g.manager_id = managers.id
                     where ${where_text} ;" ;
         }else{
-            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type,
                             g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,

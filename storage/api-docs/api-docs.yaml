@@ -439,16 +439,16 @@ paths:
             type: string
             description: "самосвал/трал/сцепка/сельхозник/тонар"
             example: "самосвал"
-        - name: "date_from"
-          in: query
-          schema:
-            type: string
-            example: "2018-02-20 23:00:00"
-        - name: "date_to"
-          in: query
-          schema:
-            type: string
-            example: "2018-02-20 23:00:00"
+#        - name: "date_from"
+#          in: query
+#          schema:
+#            type: string
+#            example: "2018-02-20 23:00:00"
+#        - name: "date_to"
+#          in: query
+#          schema:
+#            type: string
+#            example: "2018-02-20 23:00:00"
         - name: "min_deposit"
           in: query
           schema:
@@ -553,10 +553,6 @@ paths:
                   required: true
                   example: 500
                   description: "Ставка рубль/кг"
-                phone_number:
-                  type: string
-                  required: true
-                  example: "79852233456"
                 company_name:
                   type: string
                   required: true
