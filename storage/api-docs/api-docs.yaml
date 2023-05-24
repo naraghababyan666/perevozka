@@ -645,6 +645,16 @@ paths:
           schema:
             type: integer
             example: 500
+        - name: "material_type"
+          in: query
+          schema:
+            type: string
+            example: "зерновые"
+        - name: "material_info"
+          in: query
+          schema:
+            type: string
+            example: "кукуруза"
       responses:
         "200":
           description: "Returns list"
