@@ -12,7 +12,7 @@ class RegionController extends Controller
         if (strlen($text) < 4){
             return response()->json(['success' => false, 'message' => 'Minimum string length is 2'], 403);
         }
-        $result = RussiaRegions::query()->where('CityName', 'like',  '%' . $text . '%')->orderBy('CitySize', 'DESC')->get();
+        $result = RussiaRegions::query()->where('CityName', 'like',  $text . '%')->orderBy('CitySize', 'DESC')->get();
         return response()->json(['success' => true, 'cities' => $result]);
     }
 

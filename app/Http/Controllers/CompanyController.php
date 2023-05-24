@@ -369,11 +369,17 @@ class CompanyController extends Controller
         if(isset($data['min_deposit'])){
             $where[] = "g.ruble_per_kg > '${data['min_deposit']}'";
         }
-        if(isset($data['date_from'])){
-            $where[] = "g.loading_date >= '${data['date_from']}'";
+        if(isset($data['date_from']) && isset($data['date_to'])){
+            $where[] = "g.start_date >= '${data['date_from']}'";
+            $where[] = "g.end_date <= '${data['date_to']}'";
+        }else if(isset($data['date_from'])){
+            $where[] = "g.start_date >= '${data['date_from']}'";
         }
-        if(isset($data['date_to'])){
-            $where[] = "g.loading_date <= '${data['date_to']}'";
+        if(isset($data['material_type'])){
+            $where[] = "g.material_type LIKE '%${data['material_type']}%'";
+        }
+        if(isset($data['material_info'])){
+            $where[] = "g.material_info LIKE '%${data['material_info']}%'";
         }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
@@ -386,6 +392,7 @@ class CompanyController extends Controller
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                     JOIN managers managers ON g.manager_id = managers.id
                     where ${where_text}
 ";
         }else{
@@ -394,6 +401,7 @@ class CompanyController extends Controller
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                     JOIN managers managers ON g.manager_id = managers.id;
 ";
         }
         $aa = DB::select($sql);
