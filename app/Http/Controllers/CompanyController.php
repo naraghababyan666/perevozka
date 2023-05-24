@@ -119,11 +119,6 @@ class CompanyController extends Controller
     }
 
     public function getMyOrders(){
-//        $orders = GoodsOrders::query()->where('company_id', Auth::id())->get();
-//        foreach ($orders as $order){
-//            $order['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['upload_loc_id']));
-//            $order['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($order['onload_loc_id']));
-//        }
         $userID = Auth::id();
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_loc_info, g.onload_loc_id,g.onload_loc_info, g.order_title, g.kuzov_type,
                         g.loading_type, g.start_date, g.end_date, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
@@ -137,15 +132,9 @@ class CompanyController extends Controller
                 WHERE g.company_id = '${userID}';
                 ";
         $orders = DB::select($sql);
-//        $orders = GoodsOrders::query()->where('company_id', $userID)->get();
         return response()->json(['success' => true, 'data' => $orders]);
     }
     public function getMyRides(){
-//        $rides = RideOrders::query()->where('company_id', Auth::id())->get();
-//        foreach ($rides as $ride){
-//            $ride['upload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['upload_loc_id']));
-//            $ride['onload_city_name'] = ((new \App\Models\RussiaRegions)->getCityNameById($ride['onload_loc_id']));
-//        }
         $userID = Auth::id();
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type,
                         g.loading_type, g.start_date, g.end_date, g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
@@ -265,20 +254,24 @@ class CompanyController extends Controller
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
-                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, g.phone_number, NULL) AS phone_number,
+                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
                             g.material_type, g.material_info,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                    JOIN managers managers ON g.manager_id = managers.id
                     where ${where_text} ;" ;
         }else{
             $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
-                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, g.phone_number, NULL) AS phone_number,
+                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
                             g.material_type, g.material_info, upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `ride_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
-                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId ;";
+                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                     JOIN managers managers ON g.manager_id = managers.id;";
         }
         $aa = DB::select($sql);
 
