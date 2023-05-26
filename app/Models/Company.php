@@ -27,4 +27,8 @@ class Company extends Authenticatable
     protected $hidden = [
         'password'
     ];
+
+    public function manager(){
+        return $this->belongsTo(Manager::class, 'id', 'company_id');
+    }
 }

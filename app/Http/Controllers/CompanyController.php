@@ -55,29 +55,71 @@ class CompanyController extends Controller
     public function companyList(\Illuminate\Http\Request $request){
         $data = $request->all();
         $companies = [];
+        $company = Company::query();
         if(Auth::user()['role_id'] == Company::IS_OWNER){
-            $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
-                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
-                WHERE c.role_id = 2";
+
+//            $sql =  "SELECT c.id,  c.email, c.role_id, c.company_name,
+//                            IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+//                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
+//                            c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
+//                    JOIN managers managers ON managers.company_id = c.id
+//                    WHERE c.role_id = 2";
+//            if (!empty($data['searchValue'])) {
+//                $sql .= " AND c.company_name LIKE '%${data['searchValue']}%'";
+//            }
+            $company->where('role_id', Company::IS_DRIVER);
             if (!empty($data['searchValue'])) {
-                $sql .= " AND c.company_name LIKE '%${data['searchValue']}%'";
+                $company->where('company_name', 'LIKE', "%{$data['searchValue']}%");
             }
-        }else if (Auth::user()['role_id'] == Company::IS_DRIVER){
-            $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
-                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
-                WHERE c.role_id = 1";
-            if (!empty($data['searchValue'])) {
-                $sql .= " AND c.company_name LIKE '%${data['searchValue']}%'";
+            if($data['is_subscribed'] == 1){
+                $company->with('manager');
             }
-        }else{
-            $sql =  "SELECT c.id,  IF(${data['is_subscribed']} = 1, c.phone_number, NULL) AS phone_number, c.email, c.role_id, c.company_name,
-                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c";
-            if (!empty($data['searchValue'])) {
-                $sql .= " WHERE c.company_name LIKE '%${data['searchValue']}%'";
-            }
+            $company = $company->get();
+
+            return response()->json(['success' => true, 'data' => $company]);
         }
-        $data = DB::select($sql);
-        return response()->json(['data' => $data]);
+        else if (Auth::user()['role_id'] == Company::IS_DRIVER){
+//            $sql =  "SELECT c.id,
+//                            IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+//                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, c.email, c.role_id, c.company_name,
+//                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
+//                    JOIN managers managers ON c.id = managers.company_id
+//                WHERE c.role_id = 1";
+//            if (!empty($data['searchValue'])) {
+//                $sql .= " AND c.company_name LIKE '%${data['searchValue']}%'";
+//            }
+            $company->where('role_id', Company::IS_OWNER);
+            if (!empty($data['searchValue'])) {
+                $company->where('company_name', 'LIKE', "%{$data['searchValue']}%");
+            }
+            if($data['is_subscribed'] == 1){
+                $company->with('manager');
+            }
+            $company = $company->get();
+
+            return response()->json(['success' => true, 'data' => $company]);
+        }else if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER){
+//            $sql =  "SELECT c.id,
+//                            IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+//                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, c.email, c.role_id, c.company_name,
+//                c.inn, c.ogrn, c.legal_address, c.postal_address, c.logo_url from `companies` as c
+//                    JOIN managers managers ON c.id = managers.company_id";
+//            if (!empty($data['searchValue'])) {
+//                $sql .= " WHERE c.company_name LIKE '%${data['searchValue']}%'";
+//            }
+            if (!empty($data['searchValue'])) {
+                $company->where('company_name', 'LIKE', "%{$data['searchValue']}%");
+            }
+            if($data['is_subscribed'] == 1){
+                $company->with('manager');
+            }
+            $company = $company->get();
+
+            return response()->json(['success' => true, 'data' => $company]);
+        }else{
+            return response()->json(['success' => false, 'message' => 'Server error'], 500);
+
+        }
     }
 
     public function createRide(\Illuminate\Http\Request $request){
