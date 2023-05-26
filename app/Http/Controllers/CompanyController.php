@@ -20,6 +20,27 @@ use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
+    public function updateProfile(\Illuminate\Http\Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'phone_number' => 'required',
+            'company_name' => 'required',
+            'inn' => 'required',
+            'ogrn' => 'required',
+            'legal_address' => 'required',
+            'postal_address' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                "errors" => $validator->errors()
+            ])->header('Status-Code', 200);
+        }
+        $id = Auth::id();
+        Company::query()->where('id', $id)->update($validator->validated());
+        return response()->json(['success' => true, 'message' => 'User data successfully updated']);
+    }
+
     public function companyById($id){
         $company = Company::query()
             ->where('id', $id);

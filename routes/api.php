@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::get('/companies', [CompanyController::class, 'companyList'])->middleware('isSubscribed');
     Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
+    Route::post('profile-update', [CompanyController::class, 'updateProfile']);
 
     Route::prefix('review')->group(function () {
         Route::post('/create', [ReviewController::class, 'create'])->name('create-review');
