@@ -308,6 +308,9 @@ class CompanyController extends Controller
         if(isset($data['material_info'])){
             $where[] = "g.material_info LIKE '%${data['material_info']}%'";
         }
+        if(isset($data['company_id'])){
+            $where[] = "g.company_id = ${data['company_id']}";
+        }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
@@ -441,6 +444,9 @@ class CompanyController extends Controller
         }
         if(isset($data['material_info'])){
             $where[] = "g.material_info LIKE '%${data['material_info']}%'";
+        }
+        if(isset($data['company_id'])){
+            $where[] = "g.company_id = ${data['company_id']}";
         }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);

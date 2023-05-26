@@ -433,6 +433,11 @@ paths:
             type: integer
             description: "1-150KM"
             example: 1
+        - name: "company_id"
+          in: query
+          schema:
+            type: integer
+            example: 1
         - name: "loading_type"
           in: query
           schema:
@@ -651,6 +656,11 @@ paths:
           schema:
             type: string
             example: "кукуруза"
+        - name: "company_id"
+          in: query
+          schema:
+            type: integer
+            example: 1
       responses:
         "200":
           description: "Returns list"
