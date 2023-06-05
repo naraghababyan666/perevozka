@@ -93,6 +93,16 @@ paths:
           name: searchValue
           required: false
 
+        - in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+
+        - in: query
+          name: inn
+          required: false
+
       responses:
         200:
           description: "Companies list"
@@ -298,6 +308,128 @@ paths:
       tags:
         - For OWNER
       description: "Create order. Only for role OWNER and OWNER AND DRIVER... upload_loc_id meke onload_loc_id iranc id-nery kvercneq city/{CityName} apiic, man gukaq qaxaqy u kxrgeq CityId-n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upload_loc_id:
+                  type: integer
+                  required: true
+                  example: "3400"
+                upload_loc_address:
+                  type: string
+                  required: true
+                  example: "Улица Вазген Саргсяна"
+                onload_loc_id:
+                  type: integer
+                  required: true
+                  example: "6500"
+                onload_loc_address:
+                  type: string
+                  required: true
+                  example: "Улица Вазген Саргсяна"
+                order_title:
+                  type: string
+                  required: true
+                  example: "Lvacqi meqena"
+                distance:
+                  type: integer
+                  required: true
+                  example: 123
+                kuzov_type:
+                  type: string
+                  required: true
+                  example: "трал"
+                  description: "Тип кузова ( самосвал/трал/сцепка/сельхозник/тонар)"
+                loading_type:
+                  type: string
+                  required: true
+                  example: "элеватор"
+                  description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
+                start_date:
+                  type: string
+                  required: true
+                  example: "2023-04-18 00:01:33"
+                end_date:
+                  type: string
+                  required: true
+                  example: "2023-05-18 00:01:33"
+                max_weight:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "кг"
+                max_volume:
+                  type: integer
+                  required: true
+                  example: 100
+                  description: "m3"
+                payment_type:
+                  type: string
+                  required: true
+                  example: "налич"
+                  description: "Тип оплаты ( нал/безнал )"
+                payment_nds:
+                  type: string
+                  required: true
+                  example: "с НДС"
+                  description: "Тип оплаты ( с НДС/без НДС )"
+                prepaid:
+                  type: string
+                  required: true
+                  example: '0'
+                  description: 'с предоплатой'
+                ruble_per_kg:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "Ставка рубль/кг"
+                phone_number:
+                  type: string
+                  required: true
+                  example: "79852233456"
+                company_name:
+                  type: string
+                  required: true
+                  example: "Hanrayin dzayn"
+                description:
+                  type: string
+                  required: true
+                  example: "description about order"
+                manager_id:
+                  type: integer
+                  required: true
+                  example: 1
+                material_type:
+                  type: string
+                  required: true
+                  example: "зерновые"
+                  description: "инертные материалы, зерновые"
+                material_info:
+                  type: string
+                  required: true
+                  example: "кукуруза"
+                  description: "пшеница, ячмень, кукуруза, горох, рапс, рис, семечка,"
+      responses:
+        200:
+          description: 'Successfully created'
+        203:
+          description: "Validation error"
+      security:
+        - bearerAuth: [ ]
+  /api/updateOrder/{id}:
+    post:
+      tags:
+        - For OWNER
+      description: "Create order. Only for role OWNER and OWNER AND DRIVER... upload_loc_id meke onload_loc_id iranc id-nery kvercneq city/{CityName} apiic, man gukaq qaxaqy u kxrgeq CityId-n"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
@@ -583,6 +715,102 @@ paths:
       responses:
         200:
           description: 'Successfully created'
+      security:
+        - bearerAuth: [ ]
+  /api/update-ride/{id}:
+    post:
+      tags:
+        - For DRIVER
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upload_loc_id:
+                  type: integer
+                  required: true
+                  example: "60979"
+                onload_loc_id:
+                  type: integer
+                  required: true
+                  example: "96892"
+                order_title:
+                  type: string
+                  required: true
+                  example: "Lvacqi meqena"
+                kuzov_type:
+                  type: string
+                  required: true
+                  example: "трал"
+                  description: "Тип кузова ( самосвал/трал/сцепка/сельхозник/тонар)"
+                loading_type:
+                  type: string
+                  required: true
+                  example: "элеватор"
+                  description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
+                max_weight:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "кг"
+                max_volume:
+                  type: integer
+                  required: true
+                  example: 100
+                  description: "m3"
+                payment_type:
+                  type: string
+                  required: true
+                  example: "налич"
+                  description: "Тип оплаты ( нал/безнал )"
+                payment_nds:
+                  type: string
+                  required: true
+                  example: "с НДС"
+                  description: "Тип оплаты ( с НДС/без НДС )"
+                prepaid:
+                  type: string
+                  required: true
+                  example: '0'
+                  description: 'с предоплатой'
+                ruble_per_kg:
+                  type: integer
+                  required: true
+                  example: 500
+                  description: "Ставка рубль/кг"
+                company_name:
+                  type: string
+                  required: true
+                  example: "Hanrayin dzayn"
+                description:
+                  type: string
+                  required: true
+                  example: "description about order"
+                manager_id:
+                  type: integer
+                  required: true
+                  example: 1
+                material_type:
+                  type: string
+                  required: true
+                  example: "зерновые"
+                  description: "инертные материалы, зерновые"
+                material_info:
+                  type: string
+                  required: true
+                  example: "кукуруза"
+                  description: "пшеница, ячмень, кукуруза, горох, рапс, рис, семечка,"
+      responses:
+        200:
+          description: 'Successfully updated'
       security:
         - bearerAuth: [ ]
   /api/getMyRides:

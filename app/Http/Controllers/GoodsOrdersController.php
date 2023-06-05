@@ -42,9 +42,10 @@ class GoodsOrdersController extends Controller
         $goods_orders = new GoodsOrders();
         $goods_orders->company_id = Auth::id();
         $goods_orders->upload_loc_id = $validator->validated()['upload_loc_id'];
-        $goods_orders->upload_loc_info = $request->all()['upload_loc_info'] ?? null;
+        $goods_orders->upload_loc_address = $request->all()['upload_loc_address'] ?? null;
         $goods_orders->onload_loc_id = $validator->validated()['onload_loc_id'];
-        $goods_orders->onload_loc_info = $request->all()['onload_loc_info'] ?? null;
+        $goods_orders->onload_loc_address = $request->all()['onload_loc_address'] ?? null;
+        $goods_orders->distance = $request->all()['distance'] ?? null;
         $goods_orders->order_title = $validator->validated()['order_title'];
         $goods_orders->kuzov_type = $validator->validated()['kuzov_type'];
         $goods_orders->loading_type = $validator->validated()['loading_type'];
@@ -66,6 +67,42 @@ class GoodsOrdersController extends Controller
 //        $data =  DB::table('goods_orders')->latest()->first();
 
         return response()->json(['success' => true, 'message' => 'Your order successfully created']);
+
+    }
+
+    public function updateOrder(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'upload_loc_id' => 'required',
+            'onload_loc_id' => 'required',
+            'order_title' => 'required',
+            'kuzov_type' => 'required',
+            'loading_type' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'max_weight' => 'required',
+            'max_volume' => 'required',
+            'payment_type' => 'required',
+            'payment_nds' => 'required',
+            'prepaid' => 'required',
+            'ruble_per_kg' => 'required',
+            'company_name' => 'required',
+            'manager_id' => 'required',
+            'material_type' => 'required',
+            'material_info' => 'required',
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                "errors" => $validator->errors()
+            ])->header('Status-Code', 203);
+        }
+        $goods_orders = new GoodsOrders();
+        $goods = GoodsOrders::query()->findOrFail($id);
+        $goods->update($request->all());
+//        $data =  DB::table('goods_orders')->latest()->first();
+
+        return response()->json(['success' => true, 'message' => 'Your order successfully updated']);
 
     }
 }

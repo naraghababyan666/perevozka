@@ -78,7 +78,6 @@ class CompanyController extends Controller
         $companies = [];
         $company = Company::query();
         if(Auth::user()['role_id'] == Company::IS_OWNER){
-
 //            $sql =  "SELECT c.id,  c.email, c.role_id, c.company_name,
 //                            IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
 //                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
@@ -91,6 +90,12 @@ class CompanyController extends Controller
             $company->where('role_id', Company::IS_DRIVER);
             if (!empty($data['searchValue'])) {
                 $company->where('company_name', 'LIKE', "%{$data['searchValue']}%");
+            }
+            if (!empty($data['company_id'])) {
+                $company->where('id', '=', $data['company_id']);
+            }
+            if (!empty($data['inn'])) {
+                $company->where('inn', '=', $data['inn']);
             }
             if($data['is_subscribed'] == 1){
                 $company->with('manager');
@@ -113,6 +118,12 @@ class CompanyController extends Controller
             if (!empty($data['searchValue'])) {
                 $company->where('company_name', 'LIKE', "%{$data['searchValue']}%");
             }
+            if (!empty($data['company_id'])) {
+                $company->where('id', '=', $data['company_id']);
+            }
+            if (!empty($data['inn'])) {
+                $company->where('inn', '=', $data['inn']);
+            }
             if($data['is_subscribed'] == 1){
                 $company->with('manager');
             }
@@ -131,6 +142,12 @@ class CompanyController extends Controller
             if (!empty($data['searchValue'])) {
                 $company->where('company_name', 'LIKE', "%{$data['searchValue']}%");
             }
+            if (!empty($data['company_id'])) {
+                $company->where('id', '=', $data['company_id']);
+            }
+            if (!empty($data['inn'])) {
+                $company->where('inn', '=', $data['inn']);
+            }
             if($data['is_subscribed'] == 1){
                 $company->with('manager');
             }
@@ -141,6 +158,37 @@ class CompanyController extends Controller
             return response()->json(['success' => false, 'message' => 'Server error'], 500);
 
         }
+    }
+
+    public function updateRide(\Illuminate\Http\Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'upload_loc_id' => 'required',
+            'onload_loc_id' => 'required',
+            'order_title' => 'required',
+            'kuzov_type' => 'required',
+            'loading_type' => 'required',
+            'max_weight' => 'required',
+            'max_volume' => 'required',
+            'payment_type' => 'required',
+            'payment_nds' => 'required',
+            'prepaid' => 'required',
+            'ruble_per_kg' => 'required',
+            'company_name' => 'required',
+            'manager_id' => 'required',
+            'material_type' => 'required',
+            'material_info' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                "errors" => $validator->errors()
+            ])->header('Status-Code', 200);
+        }
+        $ride = RideOrders::query()->findOrFail($id);
+        $ride->update($request->all());
+//        $data =  DB::table('goods_orders')->latest()->first();
+
+        return response()->json(['success' => true, 'message' => 'Your order successfully updated']);
     }
 
     public function createRide(\Illuminate\Http\Request $request){

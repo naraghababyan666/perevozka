@@ -34,6 +34,7 @@ Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('fin
 Route::middleware('auth:sanctum')->group(function (){
     Route::middleware('isOwner')->group(function (){
         Route::post('createOrder', [GoodsOrdersController::class, 'createOrder'])->name('create-order');
+        Route::post('updateOrder/{id}', [GoodsOrdersController::class, 'updateOrder']);
         Route::get('getRides', [CompanyController::class, 'getRides'])->middleware('isSubscribed');
         Route::get('getMyOrders', [CompanyController::class, 'getMyOrders']);
 
@@ -47,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::middleware('isDriver')->group(function (){
         Route::post('create-ride', [CompanyController::class, 'createRide'])->name('create-ride');
+
+        Route::post('update-ride/{id}', [CompanyController::class, 'updateRide']);
         Route::get('getOrders', [CompanyController::class, 'getOrders'])->middleware('isSubscribed');
         Route::get('getMyRides', [CompanyController::class, 'getMyRides']);
         Route::delete('delete-ride/{id}', [CompanyController::class, 'deleteRide']);
