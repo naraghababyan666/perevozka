@@ -318,10 +318,6 @@ paths:
                   type: integer
                   required: true
                   example: "3400"
-                upload_loc_address:
-                  type: string
-                  required: true
-                  example: "Улица Вазген Саргсяна"
                 onload_loc_id:
                   type: integer
                   required: true
@@ -333,7 +329,7 @@ paths:
                 order_title:
                   type: string
                   required: true
-                  example: "Lvacqi meqena"
+                  example: "[ 'Пшеница', 'Ячмень'] masivov"
                 distance:
                   type: integer
                   required: true
@@ -343,11 +339,6 @@ paths:
                   required: true
                   example: "трал"
                   description: "Тип кузова ( самосвал/трал/сцепка/сельхозник/тонар)"
-                loading_type:
-                  type: string
-                  required: true
-                  example: "элеватор"
-                  description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
                 start_date:
                   type: string
                   required: true
@@ -356,11 +347,6 @@ paths:
                   type: string
                   required: true
                   example: "2023-05-18 00:01:33"
-                max_weight:
-                  type: integer
-                  required: true
-                  example: 500
-                  description: "кг"
                 max_volume:
                   type: integer
                   required: true
@@ -402,16 +388,6 @@ paths:
                   type: integer
                   required: true
                   example: 1
-                material_type:
-                  type: string
-                  required: true
-                  example: "зерновые"
-                  description: "инертные материалы, зерновые"
-                material_info:
-                  type: string
-                  required: true
-                  example: "кукуруза"
-                  description: "пшеница, ячмень, кукуруза, горох, рапс, рис, семечка,"
       responses:
         200:
           description: 'Successfully created'
@@ -565,16 +541,11 @@ paths:
             type: integer
             description: "1-150KM"
             example: 1
-        - name: "company_id"
-          in: query
-          schema:
-            type: integer
-            example: 1
-        - name: "loading_type"
+        - name: "kuzov_type"
           in: query
           schema:
             type: string
-            description: "самосвал/трал/сцепка/сельхозник/тонар"
+            description: "самосвал/трал/сцепка/сельхозник/тонар, masiv bdi ga"
             example: "самосвал"
 #        - name: "date_from"
 #          in: query
@@ -586,21 +557,6 @@ paths:
 #          schema:
 #            type: string
 #            example: "2018-02-20 23:00:00"
-        - name: "min_deposit"
-          in: query
-          schema:
-            type: integer
-            example: 500
-        - name: "material_type"
-          in: query
-          schema:
-            type: string
-            example: "зерновые"
-        - name: "material_info"
-          in: query
-          schema:
-            type: string
-            example: "кукуруза"
       responses:
         "200":
           description: "Returns list"
@@ -638,20 +594,11 @@ paths:
                   type: integer
                   required: true
                   example: "96892"
-                order_title:
-                  type: string
-                  required: true
-                  example: "Lvacqi meqena"
                 kuzov_type:
                   type: string
                   required: true
                   example: "трал"
                   description: "Тип кузова ( самосвал/трал/сцепка/сельхозник/тонар)"
-                loading_type:
-                  type: string
-                  required: true
-                  example: "элеватор"
-                  description: ". Тип загрузки ( элеватор/трактор/маниту/зерномет, кун,труба ) + можно добавить рукописно"
                 start_date:
                   type: string
                   required: true
@@ -660,36 +607,11 @@ paths:
                   type: string
                   required: true
                   example: "2023-05-18 00:01:33"
-                max_weight:
-                  type: integer
-                  required: true
-                  example: 500
-                  description: "кг"
                 max_volume:
                   type: integer
                   required: true
                   example: 100
                   description: "m3"
-                payment_type:
-                  type: string
-                  required: true
-                  example: "налич"
-                  description: "Тип оплаты ( нал/безнал )"
-                payment_nds:
-                  type: string
-                  required: true
-                  example: "с НДС"
-                  description: "Тип оплаты ( с НДС/без НДС )"
-                prepaid:
-                  type: string
-                  required: true
-                  example: '0'
-                  description: 'с предоплатой'
-                ruble_per_kg:
-                  type: integer
-                  required: true
-                  example: 500
-                  description: "Ставка рубль/кг"
                 company_name:
                   type: string
                   required: true
@@ -702,16 +624,6 @@ paths:
                   type: integer
                   required: true
                   example: 1
-                material_type:
-                  type: string
-                  required: true
-                  example: "зерновые"
-                  description: "инертные материалы, зерновые"
-                material_info:
-                  type: string
-                  required: true
-                  example: "кукуруза"
-                  description: "пшеница, ячмень, кукуруза, горох, рапс, рис, семечка,"
       responses:
         200:
           description: 'Successfully created'
@@ -853,7 +765,7 @@ paths:
             type: integer
             description: "1-150KM"
             example: 1
-        - name: "loading_type"
+        - name: "kuzov_type"
           in: query
           schema:
             type: string
@@ -874,21 +786,11 @@ paths:
           schema:
             type: integer
             example: 500
-        - name: "material_type"
+        - name: "order_title"
           in: query
           schema:
             type: string
-            example: "зерновые"
-        - name: "material_info"
-          in: query
-          schema:
-            type: string
-            example: "кукуруза"
-        - name: "company_id"
-          in: query
-          schema:
-            type: integer
-            example: 1
+            example: " [ 'Пшеница', 'Ячмень'] masiv kspasem "
       responses:
         "200":
           description: "Returns list"
