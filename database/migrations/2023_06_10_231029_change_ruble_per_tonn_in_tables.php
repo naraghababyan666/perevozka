@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('goods_orders', function (Blueprint $table) {
-            $table->renameColumn('ruble_per_kg', 'ruble_per_tonn');
+            $table->dropColumn('ruble_per_kg');
+            $table->decimal('ruble_per_tonn', 10, 2)->after('payment_nds');
         });
     }
 
@@ -21,8 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('goods_orders', function (Blueprint $table) {
-            $table->renameColumn('ruble_per_tonn', 'ruble_per_kg');
-        });
+        //
     }
 };
