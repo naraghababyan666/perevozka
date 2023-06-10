@@ -213,7 +213,7 @@ class CompanyController extends Controller
     public function getMyOrders(){
         $userID = Auth::id();
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.order_title, g.kuzov_type,
-                        g.loading_type, g.start_date, g.end_date, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_kg,
+                        g.loading_type, g.start_date, g.end_date, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_tonn,
                         g.company_name, g.is_disabled, g.created_at,g.description,g.distance ,
                         upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
                         managers.phone_number AS manager_phone_number, managers.FullName AS manager_name
@@ -326,7 +326,7 @@ class CompanyController extends Controller
 //            $where[] = "g.loading_type = '${data['loading_type']}'";
 //        }
 //        if(isset($data['min_deposit'])){
-//            $where[] = "g.ruble_per_kg > '${data['min_deposit']}'";
+//            $where[] = "g.ruble_per_tonn > '${data['min_deposit']}'";
 //        }
 
 //        if(isset($data['date_from']) && isset($data['date_to'])){
@@ -473,8 +473,8 @@ class CompanyController extends Controller
         if(isset($data['order_title'])){
             $where[] = "g.order_title LIKE '%${data['order_title']}%'";
         }
-        if(isset($data['ruble_per_kg'])){
-            $where[] = "g.ruble_per_kg = '${data['ruble_per_kg']}";
+        if(isset($data['ruble_per_tonn'])){
+            $where[] = "g.ruble_per_tonn = '${data['ruble_per_tonn']}";
         }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
@@ -483,7 +483,7 @@ class CompanyController extends Controller
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
-                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
@@ -494,7 +494,7 @@ class CompanyController extends Controller
 ";
         }else{
             $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
-                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g

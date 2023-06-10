@@ -10,7 +10,7 @@ class GoodsOrders extends Model
     use HasFactory;
     protected $fillable = ['company_id ', 'upload_loc_id', 'onload_loc_id','onload_loc_address','order_title', 'distance', 'kuzov_type',
         'loading_type', 'start_date', 'end_date', 'max_volume', 'payment_type', 'payment_nds',
-        'ruble_per_kg', 'company_name', 'is_disabled', 'description', 'prepaid', 'manager_id'];
+        'ruble_per_tonn', 'company_name', 'is_disabled', 'description', 'prepaid', 'manager_id'];
 
     protected $appends = ['upload_city_name', 'onload_city_name'];
     public function getUploadCityNameAttribute($id){

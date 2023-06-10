@@ -367,7 +367,7 @@ paths:
                   required: true
                   example: '0'
                   description: 'с предоплатой'
-                ruble_per_kg:
+                ruble_per_tonn:
                   type: integer
                   required: true
                   example: 500
@@ -475,7 +475,7 @@ paths:
                   required: true
                   example: '0'
                   description: 'с предоплатой'
-                ruble_per_kg:
+                ruble_per_tonn:
                   type: integer
                   required: true
                   example: 500
@@ -693,7 +693,7 @@ paths:
                   required: true
                   example: '0'
                   description: 'с предоплатой'
-                ruble_per_kg:
+                ruble_per_tonn:
                   type: integer
                   required: true
                   example: 500

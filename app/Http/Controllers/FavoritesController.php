@@ -44,7 +44,7 @@ class FavoritesController extends Controller
             if(!is_null($ride)){
 
                 $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type,
-                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
                             g.material_type, g.material_info, upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
@@ -66,7 +66,7 @@ class FavoritesController extends Controller
             }
             if(!is_null($goods)){
                 $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_loc_info, g.onload_loc_id, g.onload_loc_info, g.kuzov_type, g.loading_type, g.start_date, g.end_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_kg,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
                             g.material_type, g.material_info,
@@ -95,7 +95,7 @@ class FavoritesController extends Controller
             }
             if(!is_null($goods)){
                 $sqlGoods =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
+                            g.max_volume, g.payment_type, g.ruble_per_tonn, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
@@ -106,7 +106,7 @@ class FavoritesController extends Controller
             }
             if(!is_null($ride)){
                 $sqlRide =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_kg, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
+                            g.max_volume, g.payment_type, g.ruble_per_tonn, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `ride_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId

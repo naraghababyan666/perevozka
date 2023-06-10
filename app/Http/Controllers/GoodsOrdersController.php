@@ -24,7 +24,7 @@ class GoodsOrdersController extends Controller
             'payment_type' => 'required',
             'payment_nds' => 'required',
             'prepaid' => 'required',
-            'ruble_per_kg' => 'required',
+            'ruble_per_tonn' => 'required',
             'company_name' => 'required',
             'manager_id' => 'required',
 
@@ -43,15 +43,15 @@ class GoodsOrdersController extends Controller
         $goods_orders->onload_loc_address = $request->all()['onload_loc_address'] ?? null;
         $goods_orders->distance = $request->all()['distance'] ?? null;
         $goods_orders->order_title = $validator->validated()['order_title'];
-        $goods_orders->kuzov_type = json_encode($validator->validated()['kuzov_type']);
-        $goods_orders->loading_type = json_encode($validator->validated()['loading_type']);
+        $goods_orders->kuzov_type = ($validator->validated()['kuzov_type']);
+        $goods_orders->loading_type = ($validator->validated()['loading_type']);
         $goods_orders->start_date = $validator->validated()['start_date'];
         $goods_orders->end_date = $validator->validated()['end_date'];
         $goods_orders->max_volume = $validator->validated()['max_volume'];
         $goods_orders->payment_type = $validator->validated()['payment_type'];
         $goods_orders->payment_nds = $validator->validated()['payment_nds'];
         $goods_orders->prepaid = $validator->validated()['prepaid'];
-        $goods_orders->ruble_per_kg = $validator->validated()['ruble_per_kg'];
+        $goods_orders->ruble_per_tonn = $validator->validated()['ruble_per_tonn'];
         $goods_orders->company_name = $validator->validated()['company_name'];
         $goods_orders->description = $request->all()['description'] ?? null;
         $goods_orders->manager_id = $validator->validated()['manager_id'];
@@ -77,7 +77,7 @@ class GoodsOrdersController extends Controller
             'payment_type' => 'required',
             'payment_nds' => 'required',
             'prepaid' => 'required',
-            'ruble_per_kg' => 'required',
+            'ruble_per_tonn' => 'required',
             'company_name' => 'required',
             'manager_id' => 'required',
             'distance' => 'required',

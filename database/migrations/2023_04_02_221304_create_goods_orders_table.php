@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('max_weight');
             $table->integer('max_volume');
             $table->string('payment_type');
-            $table->decimal('ruble_per_kg', 10, 2);
+            $table->decimal('ruble_per_tonn', 10, 2);
             $table->string('phone_number');
             $table->string('company_name');
             $table->enum('is_disabled', [0, 1])->default(0);

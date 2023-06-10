@@ -17,7 +17,7 @@ return new class extends Migration
             $table->dropColumn('loading_type');
             $table->dropColumn('payment_type');
             $table->dropColumn('payment_nds');
-            $table->dropColumn('ruble_per_kg');
+            $table->dropColumn('ruble_per_tonn');
             $table->dropColumn('prepaid');
             $table->dropColumn('material_type');
             $table->dropColumn('material_info');
