@@ -49,7 +49,7 @@ class GoodsOrdersController extends Controller
         $goods_orders->payment_type = $validator->validated()['payment_type'];
         $goods_orders->payment_nds = $validator->validated()['payment_nds'];
         $goods_orders->prepaid = $validator->validated()['prepaid'];
-        $goods_orders->ruble_per_tonn = $validator->validated()['ruble_per_kg'];
+        $goods_orders->ruble_per_tonn = $validator->validated()['ruble_per_tonn'];
         $goods_orders->company_name = $validator->validated()['company_name'];
         $goods_orders->description = $request->all()['description'] ?? null;
         $goods_orders->manager_id = $validator->validated()['manager_id'];
@@ -75,7 +75,7 @@ class GoodsOrdersController extends Controller
             'payment_type' => 'required',
             'payment_nds' => 'required',
             'prepaid' => 'required',
-            'ruble_per_kg' => 'required',
+            'ruble_per_tonn' => 'required',
             'company_name' => 'required',
             'manager_id' => 'required',
             'distance' => 'required',
