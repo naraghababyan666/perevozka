@@ -18,7 +18,6 @@ class GoodsOrdersController extends Controller
             'order_title' => 'required',
             'kuzov_type' => 'required',
             'loading_type' => 'required',
-            'start_date' => 'required',
             'max_volume' => 'required',
             'payment_type' => 'required',
             'payment_nds' => 'required',
@@ -44,8 +43,8 @@ class GoodsOrdersController extends Controller
         $goods_orders->order_title = $validator->validated()['order_title'];
         $goods_orders->kuzov_type = ($validator->validated()['kuzov_type']);
         $goods_orders->loading_type = ($validator->validated()['loading_type']);
-        $goods_orders->start_date = $validator->validated()['start_date'];
-        $goods_orders->end_date = $validator->validated()['end_date'];
+        $goods_orders->start_date = $request->all()['start_date'];
+        $goods_orders->end_date = $request->all()['end_date'];
         $goods_orders->max_volume = $validator->validated()['max_volume'];
         $goods_orders->payment_type = $validator->validated()['payment_type'];
         $goods_orders->payment_nds = $validator->validated()['payment_nds'];
