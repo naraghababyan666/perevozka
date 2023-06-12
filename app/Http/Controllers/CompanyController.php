@@ -241,12 +241,12 @@ class CompanyController extends Controller
     }
 
     public function deleteRide($id){
-        RideOrders::query()->findOrFail($id)->delete();
+        RideOrders::query()->where('id', $id)->where('company_id', Auth::id())->delete();
         return response()->json(['success' => true, 'message' => 'Race successfully deleted']);
     }
 
     public function deleteOrder($id){
-        GoodsOrders::query()->findOrFail($id)->delete();
+        GoodsOrders::query()->where('id', $id)->where('company_id', Auth::id())->delete();
         return response()->json(['success' => true, 'message' => 'Race successfully deleted']);
     }
 

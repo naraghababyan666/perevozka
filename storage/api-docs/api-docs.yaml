@@ -395,6 +395,22 @@ paths:
           description: "Validation error"
       security:
         - bearerAuth: [ ]
+
+  /api/delete-order/{id}:
+    delete:
+      tags:
+        - For OWNER
+      description: "Delete my order"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: "Order id"
+      responses:
+        200:
+          description: 'Successfully deleted'
+      security:
+        - bearerAuth: [ ]
   /api/updateOrder/{id}:
     post:
       tags:
