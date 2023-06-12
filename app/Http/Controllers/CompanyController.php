@@ -245,6 +245,11 @@ class CompanyController extends Controller
         return response()->json(['success' => true, 'message' => 'Race successfully deleted']);
     }
 
+    public function deleteOrder($id){
+        GoodsOrders::query()->findOrFail($id)->delete();
+        return response()->json(['success' => true, 'message' => 'Race successfully deleted']);
+    }
+
     public function getRides(\Illuminate\Http\Request $request)
     {
         $data= $request->all();

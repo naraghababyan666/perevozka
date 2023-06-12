@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::post('updateOrder/{id}', [GoodsOrdersController::class, 'updateOrder']); //+
         Route::get('getRides', [CompanyController::class, 'getRides'])->middleware('isSubscribed');
         Route::get('getMyOrders', [CompanyController::class, 'getMyOrders']); //+
+        Route::delete('delete-order/{id}', [CompanyController::class, 'deleteOrder']);
 
     });
 
