@@ -455,11 +455,11 @@ class CompanyController extends Controller
             }
 //            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
         }
-        if(isset($data['date_from']) && isset($data['date_to'])){
-            $where[] = "g.start_date >= '${data['date_from']}'";
-            $where[] = "g.end_date <= '${data['date_to']}'";
-        }else if(isset($data['date_from'])){
-            $where[] = "g.start_date >= '${data['date_from']}'";
+        if(isset($data['start_date']) && isset($data['end_date'])){
+            $where[] = "g.start_date >= '${data['start_date']}'";
+            $where[] = "g.end_date <= '${data['end_date']}'";
+        }else if(isset($data['start_date'])){
+            $where[] = "g.start_date >= '${data['start_date']}'";
         }
         if(isset($data['order_title'])){
             $data['order_title'] = json_decode($data['order_title']);

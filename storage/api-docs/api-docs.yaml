@@ -785,14 +785,14 @@ paths:
           in: query
           schema:
             type: string
-            description: "самосвал/трал/сцепка/сельхозник/тонар"
+            description: "самосвал/трал/сцепка/сельхозник/тонар, masiv"
             example: "самосвал"
-        - name: "date_from"
+        - name: "start_date"
           in: query
           schema:
             type: string
             example: "2018-02-20 23:00:00"
-        - name: "date_to"
+        - name: "end_date"
           in: query
           schema:
             type: string
