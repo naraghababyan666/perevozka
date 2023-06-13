@@ -252,6 +252,7 @@ class CompanyController extends Controller
 
     public function getRides(\Illuminate\Http\Request $request)
     {
+
         $data= $request->all();
         if (!isset($data['upload_loc_radius'])){
             $data['upload_loc_radius'] = 100;
@@ -326,30 +327,20 @@ class CompanyController extends Controller
                 $where[] = "g.onload_loc_id IN (".implode(",", $onload_city_ids).")";
             }
         }
-
-//        if(isset($data['loading_type'])){
-//            $where[] = "g.loading_type = '${data['loading_type']}'";
-//        }
-//        if(isset($data['min_deposit'])){
-//            $where[] = "g.ruble_per_tonn > '${data['min_deposit']}'";
-//        }
-
 //        if(isset($data['date_from']) && isset($data['date_to'])){
 //            $where[] = "g.start_date >= '${data['date_from']}'";
 //            $where[] = "g.end_date <= '${data['date_to']}'";
 //        }else if(isset($data['date_from'])){
 //            $where[] = "g.start_date >= '${data['date_from']}'";
 //        }
-
         if(isset($data['kuzov_type'])){
-            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
+
+            $data['kuzov_type'] = json_decode($data['kuzov_type']);
+//            $ktypes = "'".implode("','",$data['kuzov_type'])."'";
+            foreach ($data['kuzov_type'] as $item){
+                $where[] = "g.kuzov_type LIKE '%${item}%'";
+            }
         }
-//        if(isset($data['material_info'])){
-//            $where[] = "g.material_info LIKE '%${data['material_info']}%'";
-//        }
-//        if(isset($data['company_id'])){
-//            $where[] = "g.company_id = ${data['company_id']}";
-//        }
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
@@ -381,15 +372,6 @@ class CompanyController extends Controller
     }
 
     public function getOrders(\Illuminate\Http\Request $request){
-        //upload_loc_id
-        //upload_loc_radius
-        //onload_loc_id
-        //onload_loc_radius
-        //loading_type
-        //date_from
-        //date_to
-        //min_deposit
-        //order_by norery
         $data= $request->all();
 
         if (!isset($data['upload_loc_radius'])){
@@ -467,7 +449,11 @@ class CompanyController extends Controller
         }
 
         if(isset($data['kuzov_type'])){
-            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
+            $data['kuzov_type'] = json_decode($data['kuzov_type']);
+            foreach ($data['kuzov_type'] as $item){
+                $where[] = "g.kuzov_type LIKE '%${item}%'";
+            }
+//            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
         }
         if(isset($data['date_from']) && isset($data['date_to'])){
             $where[] = "g.start_date >= '${data['date_from']}'";
@@ -476,7 +462,10 @@ class CompanyController extends Controller
             $where[] = "g.start_date >= '${data['date_from']}'";
         }
         if(isset($data['order_title'])){
-            $where[] = "g.order_title LIKE '%${data['order_title']}%'";
+            $data['order_title'] = json_decode($data['order_title']);
+            foreach ($data['order_title'] as $item) {
+                $where[] = "g.order_title LIKE '%${item}%'";
+            }
         }
         if(isset($data['ruble_per_tonn'])){
             $where[] = "g.ruble_per_tonn = '${data['ruble_per_tonn']}";
