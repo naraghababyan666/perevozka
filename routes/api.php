@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::get('list', [FavoritesController::class, 'getFavoritesList']);
         Route::post('add-goods', [FavoritesController::class, 'addToFavoriteGoods']);
         Route::post('add-ride', [FavoritesController::class, 'addToFavoriteRide']);
+        Route::post('add-company', [FavoritesController::class, 'addToFavoriteCompany']);
         Route::post('delete', [FavoritesController::class, 'deleteFromFavoriteList']);
     });
     Route::get("user", [FavoritesController::class, 'user']);

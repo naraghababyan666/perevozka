@@ -214,7 +214,7 @@ class CompanyController extends Controller
         $userID = Auth::id();
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.order_title, g.kuzov_type,
                         g.loading_type, g.start_date, g.end_date, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_tonn,
-                        g.company_name, g.is_disabled, g.created_at,g.description,g.distance ,
+                        g.company_name, g.is_disabled, g.created_at,g.description,g.distance , g.manager_id,managers.phone_number, managers.FullName,
                         upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
                         managers.phone_number AS manager_phone_number, managers.FullName AS manager_name
                  from `goods_orders` as g

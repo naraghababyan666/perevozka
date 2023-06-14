@@ -43,21 +43,23 @@ class FavoritesController extends Controller
             }
             if(!is_null($ride)){
 
-                $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.order_title, g.kuzov_type, g.loading_type,
-                            g.max_weight, g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
-                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
-                            g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
-                            g.material_type, g.material_info, upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
+                $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type,
+                            g.max_volume, IF(${subscribed} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            IF(${subscribed} = 1, managers.FullName, NULL) AS manager_name,
+                            g.company_name, g.is_disabled, g.created_at, IF(${subscribed} = 1, g.description, NULL) AS order_description, g.manager_id,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `ride_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                 JOIN managers managers ON g.manager_id = managers.id
                 WHERE `is_disabled` = '0' AND g.id IN (${rideStr});
                 ";
                 $result['ride'] = DB::select($sql);
 
             }
 
-        }else if(Auth::user()['role_id'] == Company::IS_DRIVER){
+        }
+        else if(Auth::user()['role_id'] == Company::IS_DRIVER){
             $goods = $user['favorite_goods'];
             if(!is_null($user['favorite_goods'])){
                 $goodsStr = implode(",", json_decode($goods));
@@ -65,22 +67,22 @@ class FavoritesController extends Controller
                 $goodsStr = [];
             }
             if(!is_null($goods)){
-                $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_loc_info, g.onload_loc_id, g.onload_loc_info, g.kuzov_type, g.loading_type, g.start_date, g.end_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
-                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
-                            g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
-                            g.material_type, g.material_info,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
+                $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${subscribed} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            IF(${subscribed} = 1, managers.FullName, NULL) AS manager_name,
+                            g.company_name, g.is_disabled, g.created_at, IF(${subscribed} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
+                            g.distance, upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                  JOIN managers managers ON g.manager_id = managers.id
-                WHERE `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
+                WHERE `is_disabled` = '0' AND g.id IN (${goodsStr});
                 ";
                 $result['goods'] = DB::select($sql);
             }
 
-        }else if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER){
+        }
+        else if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER){
             $goods = json_decode($user['favorite_goods']);
             $ride = json_decode($user['favorite_ride']);
             if(!is_null($user['favorite_ride'])){
@@ -94,23 +96,29 @@ class FavoritesController extends Controller
                 $goodsStr = [];
             }
             if(!is_null($goods)){
-                $sqlGoods =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_tonn, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
+                $sqlGoods =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.order_title, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${subscribed} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            IF(${subscribed} = 1, managers.FullName, NULL) AS manager_name,
+                            g.company_name, g.is_disabled, g.created_at, IF(${subscribed} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
+                            g.distance, upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                WHERE `is_disabled` = '0'  AND g.id IN (${goodsStr}) ;
+                 JOIN managers managers ON g.manager_id = managers.id
+                WHERE `is_disabled` = '0' AND g.id IN (${goodsStr}); ;
                 ";
                 $result['goods'] = DB::select($sqlGoods);
             }
             if(!is_null($ride)){
-                $sqlRide =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type, g.loading_type, g.loading_date, g.max_weight,
-                            g.max_volume, g.payment_type, g.ruble_per_tonn, g.company_name, g.is_disabled, IF(${subscribed} = 1, g.phone_number, NULL) AS phone_number, g.created_at,
+                $sqlRide =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type,
+                            g.max_volume, IF(${subscribed} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                            IF(${subscribed} = 1, managers.FullName, NULL) AS manager_name,
+                            g.company_name, g.is_disabled, g.created_at, IF(${subscribed} = 1, g.description, NULL) AS order_description, g.manager_id,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name
                  from `ride_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                 JOIN managers managers ON g.manager_id = managers.id
                 WHERE `is_disabled` = '0' AND g.id IN (${rideStr});
                 ";
                 $result['ride'] = DB::select($sqlRide);
@@ -123,6 +131,22 @@ class FavoritesController extends Controller
 //            $result['goods'][] = $goodsList;
 
         }
+
+        $companyIds = $user['favorite_companies'];
+        $companyStr = '';
+        if(!is_null($user['favorite_companies'])){
+            $goodsStr = implode(",", json_decode($companyIds));
+        }else{
+            $goodsStr = [];
+        }
+        if(!is_null(json_decode($companyIds))){
+            $companiesList = Company::query()->whereIn('id', json_decode($companyIds))->get();
+            $result['companies'] = $companiesList;
+        }else{
+            $result['companies'] = [];
+
+        }
+
         return response()->json(['success' => true, 'list' => $result]);
 
 
@@ -213,10 +237,37 @@ class FavoritesController extends Controller
                 $user['favorite_ride'] = json_encode($list);
             }
             $user->save();
-            return response()->json(['success' => true, 'message' => 'Goods successfully added to favorite list']);
+            return response()->json(['success' => true, 'message' => 'Ride successfully added to favorite list']);
         } else {
             return response()->json(['success' => false, 'message' => 'Permission denied!'], 403);
         }
+
+    }
+    public function addToFavoriteCompany(Request $request)
+    {
+            $validator = Validator::make($request->all(), [
+                'company_id' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    "errors" => $validator->errors()
+                ])->header('Status-Code', 200);
+            }
+            $user = Company::query()->where('id', Auth::id())->first();
+            $ids = [];
+            if (is_null($user['favorite_ride'])) {
+                $ids[] = $validator->validated()['company_id'];
+                $user['favorite_companies'] = json_encode($ids);
+            } else {
+                $list = json_decode($user['favorite_companies']);
+                $list[] = $validator->validated()['company_id'];
+                $list = array_unique($list);
+                $user['favorite_companies'] = json_encode($list);
+            }
+            $user->save();
+            return response()->json(['success' => true, 'message' => 'Company successfully added to favorite list']);
+
 
     }
 
