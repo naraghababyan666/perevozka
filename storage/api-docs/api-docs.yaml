@@ -797,7 +797,7 @@ paths:
           schema:
             type: string
             example: "2018-02-20 23:00:00"
-        - name: "min_deposit"
+        - name: "ruble_per_tonn"
           in: query
           schema:
             type: integer

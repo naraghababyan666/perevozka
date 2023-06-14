@@ -470,6 +470,7 @@ class CompanyController extends Controller
         if(isset($data['ruble_per_tonn'])){
             $where[] = "g.ruble_per_tonn = '${data['ruble_per_tonn']}";
         }
+        $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
