@@ -237,7 +237,7 @@ paths:
                   order_type:
                     type: string
                     required: true
-                    example: "good"
+                    example: "goods"
         responses:
           200:
             description: 'Successfully logged in'
