@@ -216,7 +216,7 @@ class CompanyController extends Controller
                         g.loading_type, g.start_date, g.end_date, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_tonn,
                         g.company_name, g.is_disabled, g.created_at,g.description,g.distance , g.manager_id,managers.phone_number, managers.FullName,
                         upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
-                        managers.phone_number AS manager_phone_number, managers.FullName AS manager_name
+                        managers.phone_number AS manager_phone_number, managers.FullName AS manager_name, managers.id AS manager_id
                  from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
@@ -468,7 +468,10 @@ class CompanyController extends Controller
             }
         }
         if(isset($data['ruble_per_tonn'])){
-            $where[] = "g.ruble_per_tonn = '${data['ruble_per_tonn']}";
+            $where[] = "g.ruble_per_tonn = '${data['ruble_per_tonn']}'";
+        }
+        if(isset($data['distance'])){
+            $where[] = "g.distance = '${data['distance']}'";
         }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
@@ -480,7 +483,7 @@ class CompanyController extends Controller
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
-                            g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
+                            g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
@@ -491,7 +494,7 @@ class CompanyController extends Controller
             $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
-                            g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,
+                            g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,g.distance,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
