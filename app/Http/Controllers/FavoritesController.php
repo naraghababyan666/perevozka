@@ -286,8 +286,11 @@ class FavoritesController extends Controller
         if($validator->validated()['order_type'] == 'ride'){
             $list = json_decode($user['favorite_ride']);
 //            array_diff($list, [$validator->validated()['order_id']]);
-            if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
-                unset($list[$key]);
+            if(count($list) != 0){
+
+                if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
+                    unset($list[$key]);
+                }
             }
             $values = array_values($list);
             if(count($values) != 0){
@@ -299,8 +302,10 @@ class FavoritesController extends Controller
         }else if ($validator->validated()['order_type'] == 'goods'){
             $list = json_decode($user['favorite_goods']);
 //            dd($list);
-            if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
-                unset($list[$key]);
+            if(count($list) != 0){
+                if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
+                    unset($list[$key]);
+                }
             }
             $values = array_values($list);
             if(count($values) != 0){
@@ -312,8 +317,10 @@ class FavoritesController extends Controller
         }else if ($validator->validated()['order_type'] == 'company'){
             $list = json_decode($user['favorite_companies']);
 //            dd($list);
-            if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
-                unset($list[$key]);
+            if(count($list) != 0){
+                if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
+                    unset($list[$key]);
+                }
             }
             $values = array_values($list);
             if(count($values) != 0){
