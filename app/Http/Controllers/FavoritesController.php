@@ -291,14 +291,16 @@ class FavoritesController extends Controller
                 if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
                     unset($list[$key]);
                 }
-            }
-            $values = array_values($list);
-            if(count($values) != 0){
-                $user['favorite_ride'] = json_encode($values);
+                $values = array_values($list);
+                if(count($values) != 0){
+                    $user['favorite_ride'] = json_encode($values);
+                }else{
+                    $user['favorite_ride'] = null;
+                }
+                $user->save();
             }else{
-                $user['favorite_ride'] = null;
+                return response()->json(['success' => false, 'message' => 'Invalid id']);
             }
-            $user->save();
         }else if ($validator->validated()['order_type'] == 'goods'){
             $list = json_decode($user['favorite_goods']);
 //            dd($list);
@@ -306,14 +308,17 @@ class FavoritesController extends Controller
                 if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
                     unset($list[$key]);
                 }
-            }
-            $values = array_values($list);
-            if(count($values) != 0){
-                $user['favorite_goods'] = json_encode($values);
+                $values = array_values($list);
+                if(count($values) != 0){
+                    $user['favorite_goods'] = json_encode($values);
+                }else{
+                    $user['favorite_goods'] = null;
+                }
+                $user->save();
             }else{
-                $user['favorite_goods'] = null;
+                return response()->json(['success' => false, 'message' => 'Invalid id']);
             }
-            $user->save();
+
         }else if ($validator->validated()['order_type'] == 'company'){
             $list = json_decode($user['favorite_companies']);
 //            dd($list);
@@ -321,14 +326,16 @@ class FavoritesController extends Controller
                 if (($key = array_search($validator->validated()['order_id'], $list)) !== false) {
                     unset($list[$key]);
                 }
-            }
-            $values = array_values($list);
-            if(count($values) != 0){
-                $user['favorite_companies'] = json_encode($values);
+                $values = array_values($list);
+                if(count($values) != 0){
+                    $user['favorite_companies'] = json_encode($values);
+                }else{
+                    $user['favorite_companies'] = null;
+                }
+                $user->save();
             }else{
-                $user['favorite_companies'] = null;
+                return response()->json(['success' => false, 'message' => 'Invalid id']);
             }
-            $user->save();
         }
         else{
             return response()->json(['success' => false, 'message' => 'Key not found']);
