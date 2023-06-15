@@ -462,9 +462,9 @@ class CompanyController extends Controller
             $where[] = "g.start_date >= '${data['start_date']}'";
         }
         if(isset($data['order_title'])){
-            $titleArr = json_decode($data['order_title']);
+//            $titleArr = json_decode($data['order_title']);
 //            foreach ($data['order_title'] as $item) {
-                $where[] = "g.order_title IN '%${titleArr}%'";
+                $where[] = "g.order_title LIKE '%${data['order_title']}%'";
 //            }
         }
         if(isset($data['ruble_per_tonn'])){
