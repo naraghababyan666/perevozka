@@ -42,7 +42,6 @@ class FavoritesController extends Controller
                 $rideStr = [];
             }
             if(!is_null($ride)){
-
                 $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.kuzov_type,
                             g.max_volume, IF(${subscribed} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${subscribed} = 1, managers.FullName, NULL) AS manager_name,
