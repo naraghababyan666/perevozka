@@ -462,9 +462,12 @@ class CompanyController extends Controller
             $where[] = "g.start_date >= '${data['start_date']}'";
         }
         if(isset($data['order_title'])){
-//            $titleArr = json_decode($data['order_title']);
+            $titleArr = json_decode($data['order_title']);
+            $titles = join("','",$titleArr);
+
+//            dd($titleArr, $data['order_title']);
 //            foreach ($data['order_title'] as $item) {
-                $where[] = "g.order_title LIKE '%${data['order_title']}%'";
+                $where[] = "g.order_title IN ('${titles}')";
 //            }
         }
         if(isset($data['ruble_per_tonn'])){
@@ -482,7 +485,7 @@ class CompanyController extends Controller
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
-                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
+                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
@@ -493,7 +496,7 @@ class CompanyController extends Controller
         }else{
             $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
-                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name,
+                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
                             g.company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,g.distance,
                             upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
