@@ -371,6 +371,20 @@ class CompanyController extends Controller
         return response()->json(['success' => true, 'orders' => $aa]);
     }
 
+
+    function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // Radius of the Earth in kilometers
+
+        $deltaLat = deg2rad($lat2 - $lat1);
+        $deltaLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
+    }
+
     public function getOrders(\Illuminate\Http\Request $request){
         $data= $request->all();
 
@@ -384,69 +398,71 @@ class CompanyController extends Controller
             return response()->json(['success' => false, 'message' => 'Параметр радиус должен быть больше 0 и меньше 300']);
         }
 
+
+
         $upload_city_ids = [];
         $onload_city_ids = [];
         $where_text =  '';
         $where = [];
-        if(isset($data['upload_loc_id'] )) {
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/" . $data['upload_loc_id'] . "/near?count=20&radius=" . $data['upload_loc_radius'],// your preferred link
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_TIMEOUT => 30000,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => array(
-                    // Set Here Your Requesred Headers
-                    'Content-Type: application/json',
-                    'Authorization: Bearer 3686751bb23c4aed92e18fd096f5b18e'
-                ),
-            ));
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
-
-            if ($err) {
-                return response()->json(['success' => false, 'message' => 'Server error']);
-            } else {
-                foreach (json_decode($response) as $item){
-                    $upload_city_ids[] = (int) $item->CityId;
-                }
-                $upload_city_ids[] = (int) $data['upload_loc_id'];
-
-                $where[] = "g.upload_loc_id IN (".implode(",", $upload_city_ids).")";
-            }
-        }
-        if(isset($data['onload_loc_id'] )) {
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/" . $data['onload_loc_id'] . "/near?count=20&radius=" . $data['onload_loc_radius'],// your preferred link
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_TIMEOUT => 30000,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-                    'Authorization: Bearer 3686751bb23c4aed92e18fd096f5b18e'
-                ),
-            ));
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
-
-            if ($err) {
-                return response()->json(['success' => false, 'message' => 'Server error']);
-            } else {
-//                dd(json_decode($response));
-                foreach (json_decode($response) as $item){
-                    $onload_city_ids[] = $item->CityId;
-                }
-                $onload_city_ids[] = (int) $data['onload_loc_id'];
-                $where[] = "g.onload_loc_id IN (".implode(",", $onload_city_ids).")";
-            }
-        }
+//        if(isset($data['upload_loc_id'] )) {
+//            $curl = curl_init();
+//            curl_setopt_array($curl, array(
+//                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/" . $data['upload_loc_id'] . "/near?count=20&radius=" . $data['upload_loc_radius'],// your preferred link
+//                CURLOPT_RETURNTRANSFER => true,
+//                CURLOPT_ENCODING => "",
+//                CURLOPT_TIMEOUT => 30000,
+//                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//                CURLOPT_CUSTOMREQUEST => "GET",
+//                CURLOPT_HTTPHEADER => array(
+//                    // Set Here Your Requesred Headers
+//                    'Content-Type: application/json',
+//                    'Authorization: Bearer 3686751bb23c4aed92e18fd096f5b18e'
+//                ),
+//            ));
+//            $response = curl_exec($curl);
+//            $err = curl_error($curl);
+//            curl_close($curl);
+//
+//            if ($err) {
+//                return response()->json(['success' => false, 'message' => 'Server error']);
+//            } else {
+//                foreach (json_decode($response) as $item){
+//                    $upload_city_ids[] = (int) $item->CityId;
+//                }
+//                $upload_city_ids[] = (int) $data['upload_loc_id'];
+//
+//                $where[] = "g.upload_loc_id IN (".implode(",", $upload_city_ids).")";
+//            }
+//        }
+//        if(isset($data['onload_loc_id'] )) {
+//            $curl = curl_init();
+//            curl_setopt_array($curl, array(
+//                CURLOPT_URL => "https://api.ati.su/v1.0/dictionaries/cities/" . $data['onload_loc_id'] . "/near?count=20&radius=" . $data['onload_loc_radius'],// your preferred link
+//                CURLOPT_RETURNTRANSFER => true,
+//                CURLOPT_ENCODING => "",
+//                CURLOPT_TIMEOUT => 30000,
+//                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//                CURLOPT_CUSTOMREQUEST => "GET",
+//                CURLOPT_HTTPHEADER => array(
+//                    'Content-Type: application/json',
+//                    'Authorization: Bearer 3686751bb23c4aed92e18fd096f5b18e'
+//                ),
+//            ));
+//            $response = curl_exec($curl);
+//            $err = curl_error($curl);
+//            curl_close($curl);
+//
+//            if ($err) {
+//                return response()->json(['success' => false, 'message' => 'Server error']);
+//            } else {
+////                dd(json_decode($response));
+//                foreach (json_decode($response) as $item){
+//                    $onload_city_ids[] = $item->CityId;
+//                }
+//                $onload_city_ids[] = (int) $data['onload_loc_id'];
+//                $where[] = "g.onload_loc_id IN (".implode(",", $onload_city_ids).")";
+//            }
+//        }
 
         if(isset($data['kuzov_type'])){
             $data['kuzov_type'] = json_decode($data['kuzov_type']);
@@ -481,8 +497,6 @@ class CompanyController extends Controller
             $where_text = implode(' AND ', $where);
         }
         if(strlen($where_text) != 0){
-//            $sql = "SELECT * from `goods_orders` where ${where_text}";
-//            $sql = "SELECT * from `goods_orders` where ${where_text}";
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
@@ -505,7 +519,31 @@ class CompanyController extends Controller
 ";
         }
         $aa = DB::select($sql);
-        return response()->json(['success' => true, 'orders' => $aa]);
+        $result = [];
+        if(isset($data['upload_loc_id'])) {
+            $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
+            foreach ($aa as $elem){
+                $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
+                $cityUploadDistance = 0;
+                $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
+                if($cityUploadDistance < $data['upload_loc_radius']){
+                    $result[] = $elem;
+                }
+            }
+        }
+        if(isset($data['onload_loc_id'])) {
+            $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
+            foreach ($result as $elem){
+                $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
+                $cityOnloadDistance = 0;
+                $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
+                if($cityOnloadDistance > $data['onload_loc_radius']){
+                    unset($elem);
+                }
+            }
+        }
+
+        return response()->json(['success' => true, 'orders' => $result]);
         dd($aa, $onload_city_ids, $sql);
 
 
