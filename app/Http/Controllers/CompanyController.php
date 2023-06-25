@@ -370,7 +370,7 @@ class CompanyController extends Controller
                      JOIN managers managers ON g.manager_id = managers.id;";
         }
         $aa = DB::select($sql);
-        $result = [];
+        $result = $aa;
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             foreach ($aa as $elem){
@@ -557,7 +557,7 @@ class CompanyController extends Controller
 ";
         }
         $aa = DB::select($sql);
-        $result = [];
+        $result = $aa;
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             foreach ($aa as $elem){
