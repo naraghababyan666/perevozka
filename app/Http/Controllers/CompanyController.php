@@ -255,10 +255,10 @@ class CompanyController extends Controller
 
         $data= $request->all();
         if (!isset($data['upload_loc_radius'])){
-            $data['upload_loc_radius'] = 100;
+            $data['upload_loc_radius'] = 5;
         }
         if (!isset($data['onload_loc_radius'])){
-            $data['onload_loc_radius'] = 100;
+            $data['onload_loc_radius'] = 5;
         }
         if($data['upload_loc_radius'] > 300 || $data['onload_loc_radius'] > 300){
             return response()->json(['success' => false, 'message' => 'Параметр радиус должен быть больше 0 и меньше 300']);
@@ -370,7 +370,7 @@ class CompanyController extends Controller
                      JOIN managers managers ON g.manager_id = managers.id;";
         }
         $aa = DB::select($sql);
-        $result = $aa;
+        $result = [];
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             foreach ($aa as $elem){
@@ -433,10 +433,10 @@ class CompanyController extends Controller
         $data= $request->all();
 
         if (!isset($data['upload_loc_radius'])){
-            $data['upload_loc_radius'] = 100;
+            $data['upload_loc_radius'] = 5;
         }
         if (!isset($data['onload_loc_radius'])){
-            $data['onload_loc_radius'] = 100;
+            $data['onload_loc_radius'] = 5;
         }
         if($data['upload_loc_radius'] > 300 || $data['onload_loc_radius'] > 300){
             return response()->json(['success' => false, 'message' => 'Параметр радиус должен быть больше 0 и меньше 300']);
