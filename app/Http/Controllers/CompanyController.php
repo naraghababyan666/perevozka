@@ -406,7 +406,13 @@ class CompanyController extends Controller
             }
 
         }
-        return response()->json(['success' => true, 'orders' => $result]);
+        if(isset($data['upload_loc_id']) || isset($data['onload_loc_id'])){
+            return response()->json(['success' => true, 'orders' => $result]);
+        }else{
+            return response()->json(['success' => true, 'orders' => $aa]);
+
+        }
+//        return response()->json(['success' => true, 'orders' => $result]);
     }
 
 
