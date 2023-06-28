@@ -531,7 +531,7 @@ class CompanyController extends Controller
 //            }
         }
         if(isset($data['ruble_per_tonn'])){
-            $where[] = "g.ruble_per_tonn < '${data['ruble_per_tonn']}'";
+            $where[] = "g.ruble_per_tonn >= '${data['ruble_per_tonn']}'";
         }
         if(isset($data['distance'])){
             $where[] = "g.distance = '${data['distance']}'";
