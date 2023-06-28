@@ -508,13 +508,6 @@ class CompanyController extends Controller
 //            }
 //        }
 
-        if(isset($data['kuzov_type'])){
-            $data['kuzov_type'] = json_decode($data['kuzov_type']);
-            foreach ($data['kuzov_type'] as $item){
-                $where[] = "g.kuzov_type LIKE '%${item}%'";
-            }
-//            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
-        }
         if(isset($data['start_date']) && isset($data['end_date'])){
             $where[] = "g.start_date >= '${data['start_date']}'";
             $where[] = "g.end_date <= '${data['end_date']}'";
@@ -523,6 +516,16 @@ class CompanyController extends Controller
         }else if(isset($data['end_date'])){
             $where[] = "g.end_date <= '${data['end_date']}'";
         }
+
+        if(isset($data['kuzov_type'])){
+            $kuzovsArr = json_decode($data['kuzov_type']);
+            $kuzovs = join("','",$kuzovsArr);
+//            foreach ($data['kuzov_type'] as $item){
+                $where[] = "g.kuzov_type IN ('${kuzovs}')";
+//            }
+//            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
+        }
+
         if(isset($data['order_title'])){
             $titleArr = json_decode($data['order_title']);
             $titles = join("','",$titleArr);
