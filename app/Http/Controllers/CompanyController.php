@@ -520,6 +520,8 @@ class CompanyController extends Controller
             $where[] = "g.end_date <= '${data['end_date']}'";
         }else if(isset($data['start_date'])){
             $where[] = "g.start_date >= '${data['start_date']}'";
+        }else if(isset($data['end_date'])){
+            $where[] = "g.end_date <= '${data['end_date']}'";
         }
         if(isset($data['order_title'])){
             $titleArr = json_decode($data['order_title']);
