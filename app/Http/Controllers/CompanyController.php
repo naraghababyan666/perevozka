@@ -335,14 +335,14 @@ class CompanyController extends Controller
 //        }else if(isset($data['date_from'])){
 //            $where[] = "g.start_date >= '${data['date_from']}'";
 //        }
-        if(isset($data['kuzov_type'])){
-
-            $data['kuzov_type'] = json_decode($data['kuzov_type']);
-//            $ktypes = "'".implode("','",$data['kuzov_type'])."'";
-            foreach ($data['kuzov_type'] as $item){
-                $where[] = "g.kuzov_type LIKE '%${item}%'";
-            }
-        }
+//        if(isset($data['kuzov_type'])){
+//
+//            $data['kuzov_type'] = json_decode($data['kuzov_type']);
+////            $ktypes = "'".implode("','",$data['kuzov_type'])."'";
+//            foreach ($data['kuzov_type'] as $item){
+//                $where[] = "g.kuzov_type LIKE '%${item}%'";
+//            }
+//        }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
@@ -370,6 +370,14 @@ class CompanyController extends Controller
                      JOIN managers managers ON g.manager_id = managers.id;";
         }
         $aa = DB::select($sql);
+
+        if(isset($data['kuzov_type'])){
+            foreach ($aa as $key => $item){
+                if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
+                    unset($aa[$key]);
+                }
+            }
+        }
         $result = [];
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
@@ -427,6 +435,15 @@ class CompanyController extends Controller
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         return $earthRadius * $c;
+    }
+
+    function hasCommonValue($array1, $array2) {
+        foreach ($array1 as $value1) {
+            if (in_array($value1, $array2)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getOrders(\Illuminate\Http\Request $request){
@@ -517,14 +534,14 @@ class CompanyController extends Controller
             $where[] = "g.end_date <= '${data['end_date']}'";
         }
 
-        if(isset($data['kuzov_type'])){
-            $kuzovsArr = json_decode($data['kuzov_type']);
-            $kuzovs = join("','",$kuzovsArr);
-//            foreach ($data['kuzov_type'] as $item){
-                $where[] = "g.kuzov_type IN ('${kuzovs}')";
-//            }
-//            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
-        }
+//        if(isset($data['kuzov_type'])){
+//            $kuzovsArr = json_decode($data['kuzov_type']);
+//            $kuzovs = join("','",$kuzovsArr);
+////            foreach ($data['kuzov_type'] as $item){
+//                $where[] = "g.kuzov_type IN ('${kuzovs}')";
+////            }
+////            $where[] = "g.kuzov_type LIKE '%${data['kuzov_type']}%'";
+//        }
 
         if(isset($data['order_title'])){
             $titleArr = json_decode($data['order_title']);
@@ -568,6 +585,14 @@ class CompanyController extends Controller
 ";
         }
         $aa = DB::select($sql);
+
+        if(isset($data['kuzov_type'])){
+            foreach ($aa as $key => $item){
+                if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
+                    unset($aa[$key]);
+                }
+            }
+        }
         $result = [];
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
