@@ -372,9 +372,14 @@ class CompanyController extends Controller
         $aa = DB::select($sql);
 
         if(isset($data['kuzov_type'])){
-            foreach ($aa as $key => $item){
+//            foreach ($aa as $key => $item){
+//                if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
+//                    unset($aa[$key]);
+//                }
+//            }
+            foreach ($aa as $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
-                    unset($aa[$key]);
+                    unset($item);
                 }
             }
         }
