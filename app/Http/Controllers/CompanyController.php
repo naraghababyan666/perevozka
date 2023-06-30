@@ -372,60 +372,40 @@ class CompanyController extends Controller
         $aa = DB::select($sql);
 
         if(isset($data['kuzov_type'])){
-//            foreach ($aa as $key => $item){
-//                if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
-//                    unset($aa[$key]);
-//                }
-//            }
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
                     unset($aa[$key]);
                 }
             }
         }
-        $result = [];
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
-            foreach ($aa as $elem){
+            foreach ($aa as $key => $elem){
                 $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
                 $cityUploadDistance = 0;
                 $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
-                if($cityUploadDistance < $data['upload_loc_radius']){
-                    $result[] = $elem;
+                if($cityUploadDistance >= $data['upload_loc_radius']){
+                    unset($aa[$key]);
                 }
             }
         }
         if(isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
-            if(isset($data['upload_loc_id'])){
-                foreach ($result as $elem){
-                    $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
-                    $cityOnloadDistance = 0;
-                    $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
-                    if($cityOnloadDistance > $data['onload_loc_radius']){
-                        unset($elem);
-                    }
+            foreach ($aa as $key => $elem){
+                $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
+                $cityOnloadDistance = 0;
+                $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
+                if($cityOnloadDistance >= $data['onload_loc_radius']){
+                    unset($aa[$key]);
                 }
-            }else{
-                foreach ($aa as $elem){
-                    $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
-                    $cityOnloadDistance = 0;
-                    $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
-                    if($cityOnloadDistance < $data['onload_loc_radius']){
-                        $result[] = $elem;
-                    }
-                }
-
             }
-
         }
-        if(isset($data['upload_loc_id']) || isset($data['onload_loc_id'])){
-            return response()->json(['success' => true, 'orders' => $result]);
-        }else{
-            return response()->json(['success' => true, 'orders' => $aa]);
 
+        $g = [];
+        foreach ($aa as $f){
+            $g[] = $f;
         }
-//        return response()->json(['success' => true, 'orders' => $result]);
+        return response()->json(['success' => true, 'rides' => $g]);
     }
 
 
@@ -590,7 +570,6 @@ class CompanyController extends Controller
 ";
         }
         $aa = DB::select($sql);
-
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
@@ -598,14 +577,13 @@ class CompanyController extends Controller
                 }
             }
         }
-        $result = [];
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             foreach ($aa as $key => $elem){
                 $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
                 $cityUploadDistance = 0;
                 $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
-                if($cityUploadDistance < $data['upload_loc_radius']){
+                if($cityUploadDistance >= $data['upload_loc_radius']){
 //                    $result[] = $elem;
 
                     unset($aa[$key]);
@@ -628,24 +606,16 @@ class CompanyController extends Controller
                 $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
                 $cityOnloadDistance = 0;
                 $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
-                if($cityOnloadDistance < $data['onload_loc_radius']){
-//                        $result[] = $elem;
-
+                if($cityOnloadDistance >= $data['onload_loc_radius']){
                     unset($aa[$key]);
                 }
 //                }
             }
         }
         $g = [];
-//        if(isset($data['upload_loc_id']) || isset($data['onload_loc_id'])){
-//            foreach ($result as $f){
-//                $g[] = $f;
-//            }
-//        }else{
-            foreach ($aa as $f){
-                $g[] = $f;
-            }
-//        }
+        foreach ($aa as $f){
+            $g[] = $f;
+        }
         return response()->json(['success' => true, 'orders' => $g]);
         dd($aa, $onload_city_ids, $sql);
 
