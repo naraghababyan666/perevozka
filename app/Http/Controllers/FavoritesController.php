@@ -255,7 +255,7 @@ class FavoritesController extends Controller
             }
             $user = Company::query()->where('id', Auth::id())->first();
             $ids = [];
-            if (is_null($user['favorite_ride'])) {
+            if (is_null($user['favorite_companies'])) {
                 $ids[] = $validator->validated()['company_id'];
                 $user['favorite_companies'] = json_encode($ids);
             } else {
