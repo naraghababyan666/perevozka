@@ -78,8 +78,8 @@ class GoodsOrdersController extends Controller
             'ruble_per_tonn' => 'required',
             'company_name' => 'required',
             'manager_id' => 'required',
-            'distance' => 'required',
-            'description' => 'required',
+            'distance' => 'required'
+
         ]);
         if ($validator->fails()) {
             return response()->json([
