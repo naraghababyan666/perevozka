@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function (){
 
     });
 
+
     Route::prefix('manager')->group(function () {
         Route::post('create', [ManagerController::class, 'create'])->name('create-manager');
         Route::post('delete/{id}', [ManagerController::class, 'delete'])->name('delete-manager');
@@ -65,6 +66,11 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::get('/companies', [CompanyController::class, 'companyList'])->middleware('isSubscribed');
     Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
     Route::post('profile-update', [CompanyController::class, 'updateProfile']);
+    Route::post('company-delete', [CompanyController::class, 'deleteCompany']);
+
+//    Route::post('payment-api', [CompanyController::class, 'paymentApi']);
+    Route::match(['GET', 'POST'], '/payments/callback', [SubscriptionsController::class, 'callback'])->name('payment.callback');
+    Route::post('payments/create', [SubscriptionsController::class, 'create']);
 
     Route::prefix('review')->group(function () {
         Route::post('/create', [ReviewController::class, 'create'])->name('create-review');

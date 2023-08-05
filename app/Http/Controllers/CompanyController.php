@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use YooKassa\Client;
 
 class CompanyController extends Controller
 {
@@ -250,6 +251,12 @@ class CompanyController extends Controller
         return response()->json(['success' => true, 'message' => 'Race successfully deleted']);
     }
 
+    public function deleteCompany(): \Illuminate\Http\JsonResponse
+    {
+        $id = Auth::id();
+        Company::query()->where('id', $id)->delete();
+        return response()->json(['success' => true, 'message' => 'Company profile successfully deleted']);
+    }
     public function getRides(\Illuminate\Http\Request $request)
     {
 
@@ -662,5 +669,48 @@ class CompanyController extends Controller
 //            return response()->json(['success' => true, 'orders' => $orders]);
 //        }
     }
+
+    /**
+     * @throws \YooKassa\Common\Exceptions\NotFoundException
+     * @throws \YooKassa\Common\Exceptions\ResponseProcessingException
+     * @throws \YooKassa\Common\Exceptions\ApiException
+     * @throws \YooKassa\Common\Exceptions\BadApiRequestException
+     * @throws \YooKassa\Common\Exceptions\ExtensionNotFoundException
+     * @throws \YooKassa\Common\Exceptions\AuthorizeException
+     * @throws \YooKassa\Common\Exceptions\InternalServerError
+     * @throws \YooKassa\Common\Exceptions\ForbiddenException
+     * @throws \YooKassa\Common\Exceptions\TooManyRequestsException
+     * @throws \YooKassa\Common\Exceptions\ApiConnectionException
+     * @throws \YooKassa\Common\Exceptions\UnauthorizedException
+     */
+    public function paymentApi(Request $request){
+        $client = new Client();
+        $client->setAuth('318022', 'live_rlyBFDJSbU_haHH2256XICLIDYs0-LJgvkRDVSel6EI');
+//        dd($client->me());
+        $idempotenceKey = uniqid('', true);
+        $response = $client->createPayment(
+            array(
+                'amount' => array(
+                    'value' => '2.00',
+                ),
+                'capture' => false,
+                'payment_method_data' => array(
+                    'type' => 'bank_card',
+                ),
+                'confirmation' => array(
+                    'type' => 'redirect',
+                    'return_url' => 'https://transagro.pro/unauthorized',
+                ),
+                'description' => 'Заказ №72',
+            ),
+            $idempotenceKey
+        );
+
+        //get confirmation url
+        $confirmationUrl = $response->getConfirmation()->getConfirmationUrl();
+        dd($confirmationUrl);
+//        return response()->json(['data' => $payment->]);
+    }
+
 
 }

@@ -3,12 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscriptions;
+use App\Models\Transactions;
+use App\Service\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class SubscriptionsController extends Controller
 {
+
+    public function index(){
+
+    }
+    public function create(Request $request, PaymentService $service){
+        $amount = (float)$request->input('amount');
+        $description = 'Buy service';
+
+        $transaction = Transactions::query()->create([
+            'amount' => $amount,
+            'description' => $description
+        ]);
+        if($transaction){
+            $link = $service->createPayment($amount, $description, [
+                'transaction_id' => $transaction->id
+            ]);
+
+            dd($link);
+        }
+
+    }
+
+    public function callback(){
+
+    }
+
     public function subscribe(Request $request){
         $data= Validator::make($request->all(),[
             'company_id' => 'required',
