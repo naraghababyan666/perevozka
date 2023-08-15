@@ -69,7 +69,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('company-delete', [CompanyController::class, 'deleteCompany']);
 
 //    Route::post('payment-api', [CompanyController::class, 'paymentApi']);
-    Route::match(['GET', 'POST'], '/payments/callback', [SubscriptionsController::class, 'callback'])->name('payment.callback');
+//    Route::match(['GET', 'POST'], '/payments/callback', [SubscriptionsController::class, 'callback'])->name('payment.callback');
     Route::post('payments/create', [SubscriptionsController::class, 'create']);
 
     Route::prefix('review')->group(function () {

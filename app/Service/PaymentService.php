@@ -28,83 +28,25 @@ class PaymentService
     public function createPayment(float $amount, string $description, array $options = []){
 
         $client = $this->getClient();
-        $response = $client->createReceipt(
+        $idempotenceKey = uniqid('', true);
+        $payment = $client->createPayment(
             array(
-                'customer' => array(
-                    'email' => Auth::user()['email'],
-                    'phone' => '79000000000',
+                'amount' => array(
+                    'value' => $amount,
                 ),
-                'type' => 'payment',
-                'payment_id' => '24e89cb0-000f-5000-9000-1de77fa0d6df',
-                'on_behalf_of' => '123',
-                'send' => true,
-                'items' => array(
-                    array(
-                        'description' => 'Платок Gucci',
-                        'quantity' => '1.00',
-                        'amount' => array(
-                            'value' => '30.00',
-                            'currency' => 'RUB',
-                        ),
-                        'vat_code' => 2,
-                        'payment_mode' => 'full_prepayment',
-                        'payment_subject' => 'commodity',
-                    ),
+                'capture' => false,
+                'payment_method_data' => array(
+                    'type' => 'bank_card',
                 ),
-                'tax_system_code' => 1,
-                'settlements' => array(
-                    array(
-                        'type' => 'cashless',
-                        'amount' => array(
-                            'value' => '30.00',
-                            'currency' => 'RUB',
-                        )
-                    ),
+                'confirmation' => array(
+                    'type' => 'redirect',
+                    'return_url' => 'https://transagro.pro/',
                 ),
+                'description' => $description ?? '',
             ),
-            uniqid('', true)
+            $idempotenceKey
         );
-        dd($response->getId());
 
-
-        $payment = $client->createPayment([
-            'amount' => [
-                'value' => $amount,
-                'currency' => 'RUB',
-            ],
-            'capture' => false,
-            'confirmation' => [
-                'type' => 'redirect',
-                'return_url' => route('payment.callback'),
-            ],
-            'receipt' => [
-                'customer' => [
-                    'full_name' => 'ыфв фывыф вфыв',
-                    'inn' => '7743013902',
-                    'email' => 'nstranger10@gmail.com',
-                    'phone' => '79000000000'
-                ],
-                'items' => [
-                    'description' => 'test 1',
-                    'amount' => [
-                        'value' => $amount,
-                        'currency' => 'RUB',
-                    ]
-                ],
-                'phone' => Auth::user()['phone_number'],
-                'email' => Auth::user()['email'],
-                'tax_system_code' => 1,
-                'receipt_industry_details' => [
-
-                ]
-            ],
-            'metadata' => [
-                'transaction_id' => $options['transaction_id'],
-            ],
-            'description' => $description,
-
-
-        ], uniqid('', true));
         return $payment->getConfirmation()->getConfirmationUrl();
 
     }
