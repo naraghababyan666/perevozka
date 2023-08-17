@@ -17,7 +17,7 @@ class SubscriptionsController extends Controller
     }
     public function create(Request $request, PaymentService $service){
         $amount = (float)$request->input('amount');
-        $description = 'Buy service';
+        $description = $request->input('description') ?? '';
 
         $transaction = Transactions::query()->create([
             'amount' => $amount,
@@ -28,7 +28,6 @@ class SubscriptionsController extends Controller
                 'transaction_id' => $transaction->id
             ]);
 
-            dd($link);
         }
 
     }

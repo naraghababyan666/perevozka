@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
     Route::post('profile-update', [CompanyController::class, 'updateProfile']);
     Route::post('company-delete', [CompanyController::class, 'deleteCompany']);
+    Route::post('change-subscribe-message-status', [CompanyController::class, 'changeSubscribeMessageStatus']);
 
 //    Route::post('payment-api', [CompanyController::class, 'paymentApi']);
 //    Route::match(['GET', 'POST'], '/payments/callback', [SubscriptionsController::class, 'callback'])->name('payment.callback');

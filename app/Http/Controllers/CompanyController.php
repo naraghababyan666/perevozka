@@ -74,6 +74,11 @@ class CompanyController extends Controller
         return response()->json(['success' => true, 'reviews_count' => $reviewsCount]);
     }
 
+    public function changeSubscribeMessageStatus(){
+        $company = Company::query()->where('id', Auth::id())->update(['subscribe_message_status' => '1']);
+        return response()->json(['success' => true]);
+    }
+
     public function companyList(\Illuminate\Http\Request $request){
         $data = $request->all();
         $companies = [];

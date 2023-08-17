@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\Company;
+use App\Models\Subscriptions;
+use Carbon\Carbon;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +41,13 @@ class AuthController extends Controller
                 $newCompany->favorites = $request["favorites"];
             }
             $newCompany->save();
+            $now = Carbon::now();
+            $addSubscription = $now->addWeek(2);
+            Subscriptions::query()->create([
+                'company_id' => $newCompany->id,
+                'valid_until' => $addSubscription->format('Y-m-d'),
+                'role_id' => $newCompany->role_id
+            ]);
             Auth::login($newCompany);
             $user = Auth::user();
             $token = $user->createToken($request["email"], ['server:update']);
