@@ -52,6 +52,10 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken($request["email"], ['server:update']);
             $user["api_token"] = $token->plainTextToken;
+            $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
+            if(!is_null($data)){
+                $user['valid_until'] = $data['valid_until'];
+            }
             $data = [
                 'success' => true,
                 'data' => $user
@@ -82,6 +86,10 @@ class AuthController extends Controller
             Auth::login($user);
             $token = $user->createToken($request["email"], ['server:update']);
             $user["api_token"] = $token->plainTextToken;
+            $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
+            if(!is_null($data)){
+                $user['valid_until'] = $data['valid_until'];
+            }
             $data = [
                 'success' => true,
                 'company' =>$user,
