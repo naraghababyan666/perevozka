@@ -27,14 +27,11 @@ class SubscriptionsController extends Controller
             $link = $service->createPayment($amount, $description, [
                 'transaction_id' => $transaction->id
             ]);
-
         }
+        return response()->json(['success' => true, 'link' => $link]);
 
     }
 
-    public function callback(){
-
-    }
 
     public function subscribe(Request $request){
         $data= Validator::make($request->all(),[
