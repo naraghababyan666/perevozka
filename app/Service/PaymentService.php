@@ -40,15 +40,41 @@ class PaymentService
                 ),
                 'confirmation' => array(
                     'type' => 'redirect',
-                    'return_url' => 'https://transagro.pro/',
+                    'return_url' => 'https://transagro.pro/after-payment-redirect',
                 ),
                 'description' => $description ?? '',
             ),
             $idempotenceKey
         );
-//        dd($payment->getConfirmation()->getConfirmationUrl());
 
         return $payment->getConfirmation()->getConfirmationUrl();
 
+    }
+
+    public function checkPayment($paymentId){
+        $client = $this->getClient();
+        try {
+            $payment = $client->getPaymentInfo($paymentId);
+            $amount = $payment->getAmount()->value;
+            $currency = $payment->getAmount()->currency;
+            $idempotenceKey = uniqid('', true);
+            try {
+                $response = $client->capturePayment([
+                    'amount' => [
+                        'value' => $amount,
+                        'currency' => $currency,
+                    ]],
+                    $paymentId,
+                    $idempotenceKey
+                );
+                return true;
+            }catch (\Exception $e){
+                return response()->json(['success' => false, 'message' => 'Payment error']);
+            }
+        }catch (\Exception $exception){
+            if($exception->getCode() == 404){
+                return response()->json(['success' => false, 'message' => 'Invalid order id']);
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ use App\Service\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use YooKassa\Client;
 
 class SubscriptionsController extends Controller
 {
@@ -33,11 +34,12 @@ class SubscriptionsController extends Controller
     }
 
 
-    public function subscribe(Request $request){
+    public function subscribe(Request $request, PaymentService $service){
         $data= Validator::make($request->all(),[
             'company_id' => 'required',
             'valid_until' => 'required|date_format:Y-m-d',
-            'role_id' => 'required'
+            'role_id' => 'required',
+            'order_id' => 'required'
         ]);
         if ($data->fails()) {
             return response()->json([
@@ -51,7 +53,19 @@ class SubscriptionsController extends Controller
                 "errors" => 'Invalid date time'
             ])->header('Status-Code', 200);
         }
-        $newData = Subscriptions::query()->create($data->validated());
-        return response()->json(['success' => true]);
+        $paymentId = $request->input('order_id');
+        $result = $service->checkPayment($paymentId);
+        if($result){
+            $newData = Subscriptions::query()->create([
+                'company_id' => $request->input('company_id'),
+                'valid_until' => $request->input('valid_until'),
+                'role_id' => $request->input('role_id'),
+            ]);
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'Payment error']);
+
     }
+
+
 }

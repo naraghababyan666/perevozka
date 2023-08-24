@@ -72,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function (){
 //    Route::post('payment-api', [CompanyController::class, 'paymentApi']);
 //    Route::match(['GET', 'POST'], '/payments/callback', [SubscriptionsController::class, 'callback'])->name('payment.callback');
     Route::post('payments/create', [SubscriptionsController::class, 'create']);
-
+    Route::get('payments/list', [SubscriptionsController::class, 'getMyOrders']);
     Route::prefix('review')->group(function () {
         Route::post('/create', [ReviewController::class, 'create'])->name('create-review');
     });
