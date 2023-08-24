@@ -20,6 +20,8 @@ class FavoritesController extends Controller
         if(!is_null($data)){
             $user['valid_until'] = $data['valid_until'];
         }
+        $tariff = DB::table('tariff')->where('role_id', Auth::user()['role_id'])->first();
+        $user['tariff'] = $tariff;
         return response()->json(['user' => $user]);
 
     }
