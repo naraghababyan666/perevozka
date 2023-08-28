@@ -34,7 +34,7 @@ class PaymentService
                 'amount' => array(
                     'value' => $amount,
                 ),
-                'capture' => false,
+                'capture' => true,
                 'payment_method_data' => array(
                     'type' => 'bank_card',
                 ),
