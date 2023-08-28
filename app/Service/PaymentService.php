@@ -69,6 +69,7 @@ class PaymentService
                     $paymentId,
                     $idempotenceKey
                 );
+                dd($response);
                 return true;
             }catch (\Exception $e){
                 return response()->json(['success' => false, 'message' => 'Payment error']);
