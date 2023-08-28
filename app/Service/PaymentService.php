@@ -33,11 +33,12 @@ class PaymentService
             array(
                 'amount' => array(
                     'value' => $amount,
+                    'currency' => 'RUB'
                 ),
-                'capture' => true,
                 'payment_method_data' => array(
                     'type' => 'bank_card',
                 ),
+                'capture' => true,
                 'confirmation' => array(
                     'type' => 'redirect',
                     'return_url' => 'https://transagro.pro/after-payment-redirect',
