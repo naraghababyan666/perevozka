@@ -57,7 +57,7 @@ class PaymentService
         $client = $this->getClient();
         try {
             $payment = $client->getPaymentInfo($paymentId);
-            dd($payment);
+            dd($payment->getStatus());
             $amount = $payment->getAmount()->value;
             $currency = $payment->getAmount()->currency;
             $idempotenceKey = uniqid('', true);
