@@ -54,15 +54,15 @@ class SubscriptionsController extends Controller
             ])->header('Status-Code', 200);
         }
         $paymentId = $request->input('order_id');
-//        $result = $service->checkPayment($paymentId);
-//        if($result){
+        $result = $service->checkPayment($paymentId);
+        if($result){
             $newData = Subscriptions::query()->create([
                 'company_id' => $request->input('company_id'),
                 'valid_until' => $request->input('valid_until'),
                 'role_id' => $request->input('role_id'),
             ]);
             return response()->json(['success' => true]);
-//        }
+        }
 //        return response()->json(['success' => false, 'message' => 'Payment error']);
 
     }

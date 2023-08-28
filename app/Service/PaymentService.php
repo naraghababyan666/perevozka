@@ -31,10 +31,7 @@ class PaymentService
         $idempotenceKey = uniqid('', true);
         $payment = $client->createPayment(
             array(
-                'amount' => array(
-                    'value' => $amount,
-                    'currency' => 'RUB'
-                ),
+                'description' => $description ?? '',
                 'payment_method_data' => array(
                     'type' => 'bank_card',
                 ),
@@ -44,7 +41,10 @@ class PaymentService
                     'enforce' => true
                 ),
                 'capture' => true,
-                'description' => $description ?? '',
+                'amount' => array(
+                    'value' => $amount,
+                    'currency' => 'RUB'
+                ),
             ),
             $idempotenceKey
         );
