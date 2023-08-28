@@ -38,11 +38,12 @@ class PaymentService
                 'payment_method_data' => array(
                     'type' => 'bank_card',
                 ),
-                'capture' => true,
                 'confirmation' => array(
                     'type' => 'redirect',
                     'return_url' => 'https://transagro.pro/after-payment-redirect',
+                    'enforce' => true
                 ),
+                'capture' => true,
                 'description' => $description ?? '',
             ),
             $idempotenceKey
