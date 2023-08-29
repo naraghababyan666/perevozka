@@ -23,9 +23,10 @@ class CompanyController extends Controller
 {
     public function changeIsPaymentWorking(\Illuminate\Http\Request $request){
         $value = $request->all()['value'];
-        $user = Company::query()->where('id', Auth::user())->first();
-        $user->isPaymentWorking = $value;
-        $user->save();
+//        $user = Company::query()->where('id', Auth::id())->first();
+//        $user->isPaymentWorking = $value;
+//        $user->save();
+        Company::query()->update(['isPaymentWorking' => $value]);
         return response()->json(['success' => true]);
     }
 
