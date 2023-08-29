@@ -28,6 +28,7 @@ class SubscriptionsController extends Controller
             $link = $service->createPayment($amount, $description, [
                 'transaction_id' => $transaction->id
             ]);
+
         }
         return response()->json(['success' => true, 'link' => $link]);
 

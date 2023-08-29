@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Service;
+use App\Models\Transactions;
 use Illuminate\Support\Facades\Auth;
 use YooKassa\Client;
 
@@ -48,7 +49,14 @@ class PaymentService
             ),
             $idempotenceKey
         );
-
+        if($payment->getStatus() != 'canceled'){
+            Transactions::query()->create([
+                'order_id' => $payment->getId(),
+                'company_id' => Auth::id(),
+                'amount' => $amount
+            ]);
+        }
+        dd($payment->getId());
         return $payment->getConfirmation()->getConfirmationUrl();
 
     }
