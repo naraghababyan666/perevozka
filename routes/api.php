@@ -87,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('makeDisabled/{id}', [SiteController::class, 'makeOrderDisable']);
     Route::get('company-reviews/{id}', [CompanyController::class, 'companyReviews']);
 
-    Route::get('/change-isPaymentWorking', [CompanyController::class, 'changeIsPaymentWorking']);
+    Route::post('/change-isPaymentWorking', [CompanyController::class, 'changeIsPaymentWorking']);
 });
 
 
