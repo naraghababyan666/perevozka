@@ -22,7 +22,7 @@ use YooKassa\Client;
 class CompanyController extends Controller
 {
     public function changeIsPaymentWorking(\Illuminate\Http\Request $request){
-        $value = $request->input('value');
+        $value = $request->all()['value'];
         $user = Company::query()->where('id', Auth::user())->first();
         $user->isPaymentWorking = $value;
         $user->save();

@@ -26,7 +26,7 @@ class PaymentService
      * @throws \YooKassa\Common\Exceptions\UnauthorizedException
      * @throws \YooKassa\Common\Exceptions\ApiConnectionException
      */
-    public function createPayment(float $amount, string $description, array $options = []){
+    public function createPayment(float $amount, string $description){
 
         $client = $this->getClient();
         $idempotenceKey = uniqid('', true);
@@ -56,7 +56,6 @@ class PaymentService
                 'amount' => $amount
             ]);
         }
-        dd($payment->getId());
         return $payment->getConfirmation()->getConfirmationUrl();
 
     }
@@ -64,22 +63,16 @@ class PaymentService
     public function checkPayment($paymentId){
         $client = $this->getClient();
         try {
-            $payment = $client->getPaymentInfo($paymentId);
-            $amount = $payment->getAmount()->value;
-            $currency = $payment->getAmount()->currency;
-            $idempotenceKey = uniqid('', true);
-            try {
-                $response = $client->capturePayment([
-                    'amount' => [
-                        'value' => $amount,
-                        'currency' => $currency,
-                    ]],
-                    $paymentId,
-                    $idempotenceKey
-                );
+//            $payment = $client->getPaymentInfo($paymentId);
+//            $amount = $payment->getAmount()->value;
+//            $currency = $payment->getAmount()->currency;
+//            $idempotenceKey = uniqid('', true);
+            $response = $client->getPaymentInfo($paymentId);
+            if($response->getStatus() == 'succeeded'){
                 return true;
-            }catch (\Exception $e){
-                return response()->json(['success' => false, 'message' => 'Payment error']);
+            }else{
+                return response()->json(['success' => false, 'message' => 'Payment in processing']);
+
             }
         }catch (\Exception $exception){
             if($exception->getCode() == 404){

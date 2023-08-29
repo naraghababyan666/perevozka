@@ -7,6 +7,8 @@ use App\Models\Transactions;
 use App\Service\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use YooKassa\Client;
 
@@ -17,19 +19,18 @@ class SubscriptionsController extends Controller
 
     }
     public function create(Request $request, PaymentService $service){
-        $amount = (float)$request->input('amount');
+        $tariff = DB::table('tariff')->where('role_id', '=', Auth::user()['role_id'])->first();
+        $amount = $tariff->price;
         $description = $request->input('description') ?? '';
 
-        $transaction = Transactions::query()->create([
-            'amount' => $amount,
-            'description' => $description
-        ]);
-        if($transaction){
-            $link = $service->createPayment($amount, $description, [
-                'transaction_id' => $transaction->id
-            ]);
+//        $transaction = Transactions::query()->create([
+//            'amount' => $amount,
+//            'description' => $description
+//        ]);
 
-        }
+//        if($transaction){
+        $link = $service->createPayment($amount, $description);
+//        }
         return response()->json(['success' => true, 'link' => $link]);
 
     }
@@ -37,9 +38,6 @@ class SubscriptionsController extends Controller
 
     public function subscribe(Request $request, PaymentService $service){
         $data= Validator::make($request->all(),[
-            'company_id' => 'required',
-            'valid_until' => 'required|date_format:Y-m-d',
-            'role_id' => 'required',
             'order_id' => 'required'
         ]);
         if ($data->fails()) {
@@ -48,20 +46,33 @@ class SubscriptionsController extends Controller
                 "errors" => $data->errors()
             ])->header('Status-Code', 200);
         }
-        if($data->validated()['valid_until'] < Carbon::now()){
-            return response()->json([
-                'success' => false,
-                "errors" => 'Invalid date time'
-            ])->header('Status-Code', 200);
-        }
-        $paymentId = $request->input('order_id');
-        $result = $service->checkPayment($paymentId);
+//        $paymentId = $request->input('order_id');
+        $paymentId = Transactions::query()->where('company_id', Auth::id())->latest('created_at')->first();
+        $result = $service->checkPayment($paymentId['order_id']);
         if($result){
-            $newData = Subscriptions::query()->create([
-                'company_id' => $request->input('company_id'),
-                'valid_until' => $request->input('valid_until'),
-                'role_id' => $request->input('role_id'),
-            ]);
+            $ifHasSubscriptions = Subscriptions::query()->where('company_id', Auth::id())->orderByDesc('valid_until')->first();
+            if (!is_null($ifHasSubscriptions)){
+                if ($ifHasSubscriptions['valid_until'] < Carbon::now()){
+                    Subscriptions::query()->create([
+                        'company_id' => Auth::id(),
+                        'valid_until' => Carbon::now()->addMonth(),
+                        'role_id' => $paymentId['role_id'],
+                    ]);
+                }else{
+                    Subscriptions::query()->create([
+                        'company_id' => Auth::id(),
+                        'valid_until' => Carbon::parse($ifHasSubscriptions['valid_until'])->addMonth(),
+                        'role_id' => $paymentId['role_id'],
+                    ]);
+                }
+            }else{
+                Subscriptions::query()->create([
+                    'company_id' => Auth::id(),
+                    'valid_until' => Carbon::now()->addMonth(),
+                    'role_id' => $paymentId['role_id'],
+                ]);
+            }
+
             return response()->json(['success' => true]);
         }
 //        return response()->json(['success' => false, 'message' => 'Payment error']);
