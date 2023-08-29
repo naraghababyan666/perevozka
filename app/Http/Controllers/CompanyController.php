@@ -21,6 +21,14 @@ use YooKassa\Client;
 
 class CompanyController extends Controller
 {
+    public function changeIsPaymentWorking(Request $request){
+        $value = $request->input('value');
+        $user = Auth::user();
+        $user->isPaymentWorking = $value;
+        $user->save();
+        return response()->json(['success' => true]);
+    }
+
     public function updateProfile(\Illuminate\Http\Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required',

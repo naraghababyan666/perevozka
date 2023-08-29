@@ -57,7 +57,6 @@ class PaymentService
         $client = $this->getClient();
         try {
             $payment = $client->getPaymentInfo($paymentId);
-            dd($payment->getStatus());
             $amount = $payment->getAmount()->value;
             $currency = $payment->getAmount()->currency;
             $idempotenceKey = uniqid('', true);
@@ -70,7 +69,6 @@ class PaymentService
                     $paymentId,
                     $idempotenceKey
                 );
-                dd($response);
                 return true;
             }catch (\Exception $e){
                 return response()->json(['success' => false, 'message' => 'Payment error']);
