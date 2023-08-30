@@ -41,7 +41,7 @@ class PaymentService
                     'return_url' => 'https://transagro.pro/after-payment-redirect',
                     'enforce' => true
                 ),
-                'capture' => false,
+                'capture' => true,
                 'amount' => array(
                     'value' => $amount,
                     'currency' => 'RUB'
@@ -69,8 +69,21 @@ class PaymentService
 //            $idempotenceKey = uniqid('', true);
             $response = $client->getPaymentInfo($paymentId);
             if($response->getPaid() == true && $response->getStatus() == 'succeeded'){
+                $idempotenceKey = uniqid('', true);
+
+                $response = $client->cancelPayment(
+                    $paymentId,
+                    $idempotenceKey
+                );
                 return true;
             }else{
+
+                $idempotenceKey = uniqid('', true);
+
+                $response = $client->cancelPayment(
+                    $paymentId,
+                    $idempotenceKey
+                );
                 return false;
             }
         }catch (\Exception $exception){
