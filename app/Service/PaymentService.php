@@ -72,7 +72,7 @@ class PaymentService
                 dd(123);
                 return true;
             }else{
-                return response()->json(['success' => false, 'message' => 'Payment in processing']);
+                return false;;
             }
         }catch (\Exception $exception){
             if($exception->getCode() == 404){
