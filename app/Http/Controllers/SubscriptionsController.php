@@ -52,6 +52,7 @@ class SubscriptionsController extends Controller
             return response()->json(['success' => false, ' message' => 'Order id not found']);
         }
         $result = $service->checkPayment($paymentId['order_id']);
+        dd($result);
         if($result){
             $ifHasSubscriptions = Subscriptions::query()->where('company_id', Auth::id())->orderByDesc('valid_until')->first();
             if (!is_null($ifHasSubscriptions)){

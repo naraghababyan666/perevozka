@@ -68,12 +68,10 @@ class PaymentService
 //            $currency = $payment->getAmount()->currency;
 //            $idempotenceKey = uniqid('', true);
             $response = $client->getPaymentInfo($paymentId);
-            dd($response->getPaid() == true && $response->getStatus() == 'succeeded');
             if($response->getPaid() == true && $response->getStatus() == 'succeeded'){
                 return true;
             }else{
                 return response()->json(['success' => false, 'message' => 'Payment in processing']);
-
             }
         }catch (\Exception $exception){
             if($exception->getCode() == 404){
