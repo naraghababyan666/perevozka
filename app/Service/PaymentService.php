@@ -69,14 +69,13 @@ class PaymentService
 //            $idempotenceKey = uniqid('', true);
             $response = $client->getPaymentInfo($paymentId);
             if($response->getPaid() == true && $response->getStatus() == 'succeeded'){
-                dd(123);
                 return true;
             }else{
                 return false;
             }
         }catch (\Exception $exception){
             if($exception->getCode() == 404){
-                return response()->json(['success' => false, 'message' => 'Invalid order id']);
+                return false;
             }
         }
     }
