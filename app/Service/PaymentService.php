@@ -68,6 +68,7 @@ class PaymentService
 //            $currency = $payment->getAmount()->currency;
 //            $idempotenceKey = uniqid('', true);
             $response = $client->getPaymentInfo($paymentId);
+            dd($response->getPaid(), $response->getStatus());
             if(!$response->getPaid()){
                 return true;
             }else{
