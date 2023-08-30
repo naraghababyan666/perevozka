@@ -69,7 +69,7 @@ class PaymentService
 //            $idempotenceKey = uniqid('', true);
             $response = $client->getPaymentInfo($paymentId);
             if($response->getPaid() == true && $response->getStatus() == 'succeeded'){
-                dd($response->getConfirmation());
+                dd(123);
                 return true;
             }else{
                 return response()->json(['success' => false, 'message' => 'Payment in processing']);
