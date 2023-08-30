@@ -76,7 +76,7 @@ class SubscriptionsController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'asd' => 'sadsadsad']);
         }
         return response()->json(['success' => false, 'message' => 'Payment error']);
 
