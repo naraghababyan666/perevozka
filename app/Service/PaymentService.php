@@ -41,7 +41,7 @@ class PaymentService
                     'return_url' => 'https://transagro.pro/after-payment-redirect',
                     'enforce' => true
                 ),
-                'capture' => true,
+                'capture' => false,
                 'amount' => array(
                     'value' => $amount,
                     'currency' => 'RUB'
