@@ -47,7 +47,7 @@ class SubscriptionsController extends Controller
             ])->header('Status-Code', 200);
         }
 //        $paymentId = $request->input('order_id');
-        $paymentId = Transactions::query()->where('company_id', Auth::id())->latest('created_at')->first();
+        $paymentId = Transactions::query()->where('company_id', Auth::id())->where('order_id', $request->all()['order_id'])->latest('created_at')->first();
         if(is_null($paymentId)){
             return response()->json(['success' => false, ' message' => 'Order id not found']);
         }
@@ -78,7 +78,7 @@ class SubscriptionsController extends Controller
 
             return response()->json(['success' => true]);
         }
-//        return response()->json(['success' => false, 'message' => 'Payment error']);
+        return response()->json(['success' => false, 'message' => 'Payment error']);
 
     }
 
