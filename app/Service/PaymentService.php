@@ -72,7 +72,7 @@ class PaymentService
                 dd(123);
                 return true;
             }else{
-                return false;;
+                return false;
             }
         }catch (\Exception $exception){
             if($exception->getCode() == 404){
