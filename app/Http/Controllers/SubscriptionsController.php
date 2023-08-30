@@ -48,7 +48,6 @@ class SubscriptionsController extends Controller
         }
 //        $paymentId = $request->input('order_id');
         $paymentId = Transactions::query()->where('company_id', Auth::id())->where('order_id', $request->all()['order_id'])->latest('created_at')->first();
-        dd($paymentId);
         if(is_null($paymentId)){
             return response()->json(['success' => false, ' message' => 'Order id not found']);
         }
