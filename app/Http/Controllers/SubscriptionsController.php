@@ -48,6 +48,7 @@ class SubscriptionsController extends Controller
         }
 //        $paymentId = $request->input('order_id');
         $paymentId = Transactions::query()->where('company_id', Auth::id())->latest('created_at')->first();
+        dd($paymentId);
         $result = $service->checkPayment($paymentId['order_id']);
         if($result){
             $ifHasSubscriptions = Subscriptions::query()->where('company_id', Auth::id())->orderByDesc('valid_until')->first();
