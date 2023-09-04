@@ -69,21 +69,9 @@ class PaymentService
 //            $idempotenceKey = uniqid('', true);
             $response = $client->getPaymentInfo($paymentId);
             if($response->getPaid() == true && $response->getStatus() == 'succeeded'){
-                $idempotenceKey = uniqid('', true);
-
-                $response = $client->cancelPayment(
-                    $paymentId,
-                    $idempotenceKey
-                );
+                Transactions::query()->where('order_id', $paymentId)->where('company_id', Auth::id())->delete();
                 return true;
             }else{
-
-                $idempotenceKey = uniqid('', true);
-
-                $response = $client->cancelPayment(
-                    $paymentId,
-                    $idempotenceKey
-                );
                 return false;
             }
         }catch (\Exception $exception){
