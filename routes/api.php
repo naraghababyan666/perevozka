@@ -83,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::post('add-company', [FavoritesController::class, 'addToFavoriteCompany']);
         Route::post('delete', [FavoritesController::class, 'deleteFromFavoriteList']);
     });
-    Route::get("user", [FavoritesController::class, 'user']);
+    Route::get("user", [FavoritesController::class, 'user'])->middleware('isSubscribed');;
     Route::post('makeDisabled/{id}', [SiteController::class, 'makeOrderDisable']);
     Route::get('company-reviews/{id}', [CompanyController::class, 'companyReviews']);
 
