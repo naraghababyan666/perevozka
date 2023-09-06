@@ -14,12 +14,13 @@ use Illuminate\Support\Facades\Validator;
 class FavoritesController extends Controller
 {
     public function user(Request $request){
-        dd($request->all());
         $user = Auth::user();
         $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
         if(!is_null($data)){
             $user['valid_until'] = $data['valid_until'];
+            $user['is_subscribed'] = 1;
         }
+
         $tariff = DB::table('tariff')->where('role_id', Auth::user()['role_id'])->first();
         $user['tariff'] = $tariff;
         return response()->json(['user' => $user]);
