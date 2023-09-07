@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Favorites;
 use App\Models\Subscriptions;
+use App\Models\Transactions;
+use App\Service\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +25,20 @@ class FavoritesController extends Controller
 
         $tariff = DB::table('tariff')->where('role_id', Auth::user()['role_id'])->first();
         $user['tariff'] = $tariff;
+        $this->makeSubscription();
         return response()->json(['user' => $user]);
+
+    }
+
+    public function makeSubscription(){
+        $service = new PaymentService();
+//        $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
+        $transactions = Transactions::query()->where('company_id', Auth::id())->get();
+        if(!is_null($transactions)){
+            foreach ($transactions as $transaction){
+                $service->checkPaymentForMobile($transaction['order_id']);
+            }
+        }
 
     }
 
