@@ -103,6 +103,7 @@ class PaymentService
                             'valid_until' => Carbon::parse($ifHasSubscriptions['valid_until'])->addMonth(),
                             'role_id' => $paymentId['role_id'],
                         ]);
+                        $ifHasSubscriptions->delete();
                     }
                 }else{
                     Subscriptions::query()->create([
