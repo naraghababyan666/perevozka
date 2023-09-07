@@ -17,6 +17,7 @@ class FavoritesController extends Controller
 {
     public function user(Request $request){
         $user = Auth::user();
+        $this->makeSubscription();
         $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
         if(!is_null($data)){
             $user['valid_until'] = $data['valid_until'];
@@ -25,7 +26,6 @@ class FavoritesController extends Controller
 
         $tariff = DB::table('tariff')->where('role_id', Auth::user()['role_id'])->first();
         $user['tariff'] = $tariff;
-        $this->makeSubscription();
         return response()->json(['user' => $user]);
 
     }
