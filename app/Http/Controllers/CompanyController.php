@@ -368,6 +368,7 @@ class CompanyController extends Controller
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
+
         if(strlen($where_text) != 0){
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
 //            $sql = "SELECT * from `goods_orders` where ${where_text}";
@@ -464,7 +465,6 @@ class CompanyController extends Controller
         if($data['upload_loc_radius'] > 300 || $data['onload_loc_radius'] > 300){
             return response()->json(['success' => false, 'message' => 'Параметр радиус должен быть больше 0 и меньше 300']);
         }
-
 
 
         $upload_city_ids = [];

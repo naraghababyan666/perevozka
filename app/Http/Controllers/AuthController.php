@@ -42,7 +42,7 @@ class AuthController extends Controller
             }
             $newCompany->save();
             $now = Carbon::now();
-            $addSubscription = $now->addWeek(2);
+            $addSubscription = $now->addMonths(4);
             Subscriptions::query()->create([
                 'company_id' => $newCompany->id,
                 'valid_until' => $addSubscription->format('Y-m-d'),

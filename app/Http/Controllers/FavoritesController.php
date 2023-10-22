@@ -23,6 +23,7 @@ class FavoritesController extends Controller
             $user['valid_until'] = $data['valid_until'];
             $user['isSubscribed'] = 1;
         }
+        $user['isSubscribed'] = 1;
 
         $tariff = DB::table('tariff')->where('role_id', Auth::user()['role_id'])->first();
         $user['tariff'] = $tariff;

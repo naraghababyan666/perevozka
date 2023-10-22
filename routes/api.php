@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::post('createOrder', [GoodsOrdersController::class, 'createOrder'])->name('create-order'); //+
         Route::post('updateOrder/{id}', [GoodsOrdersController::class, 'updateOrder']); //+
         Route::get('getRides', [CompanyController::class, 'getRides'])->middleware('isSubscribed');
+//        Route::get('getRides', [CompanyController::class, 'getRides']);
         Route::get('getMyOrders', [CompanyController::class, 'getMyOrders']); //+
         Route::delete('delete-order/{id}', [CompanyController::class, 'deleteOrder']);
 
@@ -53,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function (){
 
         Route::post('update-ride/{id}', [CompanyController::class, 'updateRide']); //+
         Route::get('getOrders', [CompanyController::class, 'getOrders'])->middleware('isSubscribed'); //+
+//        Route::get('getOrders', [CompanyController::class, 'getOrders']); //+
         Route::get('getMyRides', [CompanyController::class, 'getMyRides']); //+
         Route::delete('delete-ride/{id}', [CompanyController::class, 'deleteRide']);
 
@@ -64,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function (){
     });
 
     Route::get('/companies', [CompanyController::class, 'companyList'])->middleware('isSubscribed');
+//    Route::get('/companies', [CompanyController::class, 'companyList']);
     Route::post('subscribe',[SubscriptionsController::class, 'subscribe']);
     Route::post('profile-update', [CompanyController::class, 'updateProfile']);
     Route::post('company-delete', [CompanyController::class, 'deleteCompany']);
@@ -83,7 +86,8 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::post('add-company', [FavoritesController::class, 'addToFavoriteCompany']);
         Route::post('delete', [FavoritesController::class, 'deleteFromFavoriteList']);
     });
-    Route::get("user", [FavoritesController::class, 'user'])->middleware('isSubscribed');;
+    Route::get("user", [FavoritesController::class, 'user'])->middleware('isSubscribed');
+//    Route::get("user", [FavoritesController::class, 'user']);
     Route::post('makeDisabled/{id}', [SiteController::class, 'makeOrderDisable']);
     Route::get('company-reviews/{id}', [CompanyController::class, 'companyReviews']);
 
