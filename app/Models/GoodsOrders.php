@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GoodsOrders extends Model
 {
     use HasFactory;
-    protected $fillable = ['company_id ', 'upload_loc_id', 'onload_loc_id','onload_loc_address','order_title', 'distance', 'kuzov_type',
+    protected $fillable = ['company_id ', 'upload_loc_id', 'onload_loc_id', 'onload_region_id', 'upload_region_id', 'onload_loc_address','order_title', 'distance', 'kuzov_type',
         'loading_type', 'start_date', 'end_date', 'max_volume', 'payment_type', 'payment_nds',
         'ruble_per_tonn', 'company_name', 'is_disabled', 'description', 'prepaid', 'manager_id'];
 

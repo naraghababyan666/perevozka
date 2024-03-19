@@ -12,21 +12,43 @@ class GoodsOrdersController extends Controller
 {
     public function createOrder(Request $request){
 
-        $validator = Validator::make($request->all(), [
-            'upload_loc_id' => 'required',
-            'onload_loc_id' => 'required',
-            'order_title' => 'required',
-            'kuzov_type' => 'required',
-            'loading_type' => 'required',
-            'max_volume' => 'required',
-            'payment_type' => 'required',
-            'payment_nds' => 'required',
-            'prepaid' => 'required',
-            'ruble_per_tonn' => 'required',
-            'company_name' => 'required',
-            'manager_id' => 'required',
 
-        ]);
+        if($request->all()['payment_type'] == 'без нал'){
+            $validator = Validator::make($request->all(), [
+                'upload_loc_id' => 'required',
+                'onload_loc_id' => 'required',
+                'upload_region_id' => 'required',
+                'onload_region_id' => 'required',
+                'order_title' => 'required',
+                'kuzov_type' => 'required',
+                'loading_type' => 'required',
+                'max_volume' => 'required',
+                'payment_type' => 'required',
+                'prepaid' => 'required',
+                'ruble_per_tonn' => 'required',
+                'company_name' => 'required',
+                'manager_id' => 'required',
+
+            ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'upload_loc_id' => 'required',
+                'onload_loc_id' => 'required',
+                'upload_region_id' => 'required',
+                'onload_region_id' => 'required',
+                'order_title' => 'required',
+                'kuzov_type' => 'required',
+                'loading_type' => 'required',
+                'max_volume' => 'required',
+                'payment_type' => 'required',
+                'payment_nds' => 'required',
+                'prepaid' => 'required',
+                'ruble_per_tonn' => 'required',
+                'company_name' => 'required',
+                'manager_id' => 'required',
+
+            ]);
+        }
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -38,6 +60,8 @@ class GoodsOrdersController extends Controller
         $goods_orders->company_id = Auth::id();
         $goods_orders->upload_loc_id = $validator->validated()['upload_loc_id'];
         $goods_orders->onload_loc_id = $validator->validated()['onload_loc_id'];
+        $goods_orders->onload_region_id = $validator->validated()['onload_region_id'];
+        $goods_orders->upload_region_id = $validator->validated()['upload_region_id'];
         $goods_orders->onload_loc_address = $request->all()['onload_loc_address'] ?? null;
         $goods_orders->distance = $request->all()['distance'] ?? null;
         $goods_orders->order_title = $validator->validated()['order_title'];
@@ -65,6 +89,8 @@ class GoodsOrdersController extends Controller
         $validator = Validator::make($request->all(), [
             'upload_loc_id' => 'required',
             'onload_loc_id' => 'required',
+            'upload_region_id' => 'required',
+            'onload_region_id' => 'required',
             'onload_loc_address' => 'required',
             'order_title' => 'required',
             'kuzov_type' => 'required',

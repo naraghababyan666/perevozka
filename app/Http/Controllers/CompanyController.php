@@ -14,6 +14,7 @@ use App\Models\Subscriptions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
@@ -92,6 +93,7 @@ class CompanyController extends Controller
         $data = $request->all();
         $companies = [];
         $company = Company::query();
+        $limit = $request->all()['limit'] ?? 5;
         if(Auth::user()['role_id'] == Company::IS_OWNER){
 //            $sql =  "SELECT c.id,  c.email, c.role_id, c.company_name,
 //                            IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
@@ -115,7 +117,7 @@ class CompanyController extends Controller
             if($data['is_subscribed'] == 1){
                 $company->with('manager');
             }
-            $company = $company->get();
+            $company = $company->paginate($limit);
 
             return response()->json(['success' => true, 'data' => $company]);
         }
@@ -142,7 +144,7 @@ class CompanyController extends Controller
             if($data['is_subscribed'] == 1){
                 $company->with('manager');
             }
-            $company = $company->get();
+            $company = $company->paginate($limit);
 
             return response()->json(['success' => true, 'data' => $company]);
         }else if(Auth::user()['role_id'] == Company::IS_OWNER_AND_DRIVER){
@@ -166,7 +168,7 @@ class CompanyController extends Controller
             if($data['is_subscribed'] == 1){
                 $company->with('manager');
             }
-            $company = $company->get();
+            $company = $company->paginate($limit);
 
             return response()->json(['success' => true, 'data' => $company]);
         }else{
@@ -275,6 +277,10 @@ class CompanyController extends Controller
     {
 
         $data= $request->all();
+
+        $offset = $request->all()['offset'] ?? 0;
+        $limit =  $request->all()['limit'] ?? 3;
+
         if (!isset($data['upload_loc_radius'])){
             $data['upload_loc_radius'] = 5;
         }
@@ -380,7 +386,7 @@ class CompanyController extends Controller
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                     JOIN managers managers ON g.manager_id = managers.id
-                    where ${where_text} ;" ;
+                    where ${where_text} " ;
         }else{
             $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id,  g.kuzov_type,
                             g.max_volume, IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
@@ -391,8 +397,9 @@ class CompanyController extends Controller
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                      JOIN managers managers ON g.manager_id = managers.id;";
         }
+        $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
+//        dd($sql);
         $aa = DB::select($sql);
-
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
@@ -456,6 +463,9 @@ class CompanyController extends Controller
     public function getOrders(\Illuminate\Http\Request $request){
         $data= $request->all();
 
+        $offset = $request->all()['offset'] ?? 0;
+        $limit =  $request->all()['limit'] ?? 3;
+
         if (!isset($data['upload_loc_radius'])){
             $data['upload_loc_radius'] = 5;
         }
@@ -465,7 +475,6 @@ class CompanyController extends Controller
         if($data['upload_loc_radius'] > 300 || $data['onload_loc_radius'] > 300){
             return response()->json(['success' => false, 'message' => 'Параметр радиус должен быть больше 0 и меньше 300']);
         }
-
 
         $upload_city_ids = [];
         $onload_city_ids = [];
@@ -569,27 +578,37 @@ class CompanyController extends Controller
             $where_text = implode(' AND ', $where);
         }
         if(strlen($where_text) != 0){
-            $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+            $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
-                            IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
+                            IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at,
+                            IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
+                            upload_reg.Name as upload_region_name, onload_reg.Name as onload_region_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                     JOIN russia_only_regions upload_reg ON g.upload_region_id = upload_reg.id
+                     JOIN russia_only_regions onload_reg ON g.onload_region_id = onload_reg.id
                      JOIN managers managers ON g.manager_id = managers.id
                     where ${where_text}
 ";
         }else{
-            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
                             IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
-                            IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at, IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,g.distance,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
+                            IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at,
+                            IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,g.distance,
+                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
+                            upload_reg.Name as upload_region_name, onload_reg.Name as onload_region_name from `goods_orders` as g
                      JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                      JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                     JOIN russia_only_regions upload_reg ON g.upload_region_id = upload_reg.id
+                     JOIN russia_only_regions onload_reg ON g.onload_region_id = onload_reg.id
                      JOIN managers managers ON g.manager_id = managers.id;
 ";
         }
+        $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
+//        dd($sql);
         $aa = DB::select($sql);
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
@@ -598,20 +617,30 @@ class CompanyController extends Controller
                 }
             }
         }
-        if(isset($data['upload_loc_id'])) {
+        if(isset($data['upload_region_id'])){
+            foreach ($aa as $k => $element){
+                if($element->upload_region_id != $data['upload_region_id']){
+                    unset($aa[$k]);
+                }
+            }
+        }else if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             foreach ($aa as $key => $elem){
                 $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
                 $cityUploadDistance = 0;
                 $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
                 if($cityUploadDistance >= $data['upload_loc_radius']){
-//                    $result[] = $elem;
-
                     unset($aa[$key]);
                 }
             }
         }
-        if(isset($data['onload_loc_id'])) {
+        if(isset($data['onload_region_id'])){
+            foreach ($aa as $k => $element){
+                if($element->onload_region_id != $data['onload_region_id']){
+                    unset($aa[$k]);
+                }
+            }
+        }else if(isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
 //            if(isset($data['upload_loc_id'])){
 //                foreach ($result as $elem){
@@ -724,6 +753,22 @@ class CompanyController extends Controller
         $confirmationUrl = $response->getConfirmation()->getConfirmationUrl();
         dd($confirmationUrl);
 //        return response()->json(['data' => $payment->]);
+    }
+
+    public function resetPassword(\Illuminate\Http\Request $request){
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|min:8'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                "errors" => $validator->errors()
+            ])->header('Status-Code', 200);
+        }
+        $user = Auth::user();
+        $user->password = Hash::make($request->all()['password']);
+        $user->save();
+        return response()->json(['success' => true]);
     }
 
 

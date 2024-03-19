@@ -12,6 +12,8 @@ use \App\Http\Controllers\GoodsOrdersController;
 use \App\Http\Controllers\RegionController;
 use \App\Http\Controllers\SubscriptionsController;
 use App\Http\Controllers\AdminController;
+use \App\Http\Controllers\ConfigController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,8 @@ Route::post('/registration', [AuthController::class, 'registration']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('city/{cityName}', [RegionController::class, 'filterCity']);
+Route::get('region/{regionName}', [RegionController::class, 'filterRegion']);
+
 Route::get('infoCity/{CityId}', [RegionController::class, 'getInfoCityById']);
 Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('find-company');
 
@@ -63,6 +67,14 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::get('confirm-review/{id}', [AdminController::class, 'confirmReview']);
         Route::get('decline-review/{id}', [AdminController::class, 'declineReview']);
         Route::get('review-list', [AdminController::class, 'reviewList']);
+        Route::delete('user/{id}', [AdminController::class, 'deleteUser']);
+
+        Route::get('configs', [ConfigController::class, 'index']);
+        Route::put('configs', [ConfigController::class, 'update']);
+
+        Route::put('users/change-subscription', [AdminController::class, 'changeSubscription']);
+
+        Route::post('send-mail', [AdminController::class, 'sendMail']);
     });
 
     Route::get('/companies', [CompanyController::class, 'companyList'])->middleware('isSubscribed');
@@ -87,11 +99,13 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::post('delete', [FavoritesController::class, 'deleteFromFavoriteList']);
     });
     Route::get("user", [FavoritesController::class, 'user'])->middleware('isSubscribed');
+    Route::post('reset-password', [CompanyController::class, 'resetPassword']);
 //    Route::get("user", [FavoritesController::class, 'user']);
     Route::post('makeDisabled/{id}', [SiteController::class, 'makeOrderDisable']);
     Route::get('company-reviews/{id}', [CompanyController::class, 'companyReviews']);
 
     Route::post('/change-isPaymentWorking', [CompanyController::class, 'changeIsPaymentWorking']);
+
 });
 
 

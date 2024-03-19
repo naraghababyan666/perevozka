@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RussiaOnlyRegions;
 use App\Models\RussiaRegions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,13 @@ class RegionController extends Controller
         }
         $result = RussiaRegions::query()->where('CityName', 'like',  $text . '%')->orderBy('CitySize', 'DESC')->get();
         return response()->json(['success' => true, 'cities' => $result]);
+    }
+    public function filterRegion($text){
+        if (strlen($text) < 4){
+            return response()->json(['success' => false, 'message' => 'Minimum string length is 2'], 403);
+        }
+        $result = RussiaOnlyRegions::query()->where('Name', 'like',  $text . '%')->get();
+        return response()->json(['success' => true, 'regions' => $result]);
     }
 
     public function getInfoCityById($id){

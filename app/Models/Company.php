@@ -31,4 +31,16 @@ class Company extends Authenticatable
     public function manager(){
         return $this->belongsTo(Manager::class, 'id', 'company_id');
     }
+
+    public function goods(){
+        return $this->hasOne(GoodsOrders::class, 'id', 'company_id');
+    }
+    public function rides(){
+        return $this->hasOne(RideOrders::class, 'id', 'company_id');
+    }
+    public function subscriptions(){
+        return $this->hasOne(Subscriptions::class, 'id', 'company_id');
+    }
+
+
 }
