@@ -76,10 +76,14 @@ class AdminController extends Controller
 
     public function sendMail(Request $request){
         $text = $request->all()['text'];
+
         $users = Company::all();
-        foreach ($users as $user){
-            Mail::to($user['email'])->send(new SendMail($text));
-        }
+//        foreach ($users as $user){
+
+//            Mail::to($user['email'])->send(new SendMail($text));
+            Mail::to('nstranger10@gmail.com')->send(new SendMail($text));
+
+//        }
         return response()->json(['success' => true]);
     }
 }
