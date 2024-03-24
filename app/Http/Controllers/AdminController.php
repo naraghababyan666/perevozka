@@ -81,7 +81,7 @@ class AdminController extends Controller
 //        foreach ($users as $user){
 //
 //            Mail::to($user['email'])->send(new SendMail($text));
-            Mail::to('nstranger10@gmail.com')->send(new SendMail($text));
+            Mail::to('naraghababyan777@mail.com')->send(new SendMail($text));
 //
 //        }
         return response()->json(['success' => true]);
