@@ -614,11 +614,9 @@ class CompanyController extends Controller
                      JOIN managers managers ON g.manager_id = managers.id;
 ";
         }
-        dd($sql);
         $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
 //        dd($sql);
         $aa = DB::select($sql);
-        dd($aa);
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
@@ -626,6 +624,7 @@ class CompanyController extends Controller
                 }
             }
         }
+        dd($data['upload_region_id']);
         if(isset($data['upload_region_id'])){
             foreach ($aa as $k => $element){
                 if($element->upload_region_id != $data['upload_region_id']){
