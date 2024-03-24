@@ -624,7 +624,7 @@ class CompanyController extends Controller
                 }
             }
         }
-        dd($data['upload_region_id']);
+        dd(isset($data['upload_region_id']));
         if(isset($data['upload_region_id'])){
             foreach ($aa as $k => $element){
                 if($element->upload_region_id != $data['upload_region_id']){
