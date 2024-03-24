@@ -573,13 +573,17 @@ class CompanyController extends Controller
         if(isset($data['distance'])){
             $where[] = "g.distance = '${data['distance']}'";
         }
+        if(isset($data['upload_region_id'])){
+            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
+        }
+        if(isset($data['onload_region_id'])){
+            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
+        }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
-//        if(isset("upload_region_id")){
-//
-//        }
+
         if(strlen($where_text) != 0){
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
