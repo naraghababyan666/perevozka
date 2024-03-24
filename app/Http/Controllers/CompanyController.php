@@ -624,31 +624,26 @@ class CompanyController extends Controller
                 }
             }
         }
-        dd(isset($data['upload_region_id']));
-        if(isset($data['upload_region_id'])){
-            foreach ($aa as $k => $element){
-                if($element->upload_region_id != $data['upload_region_id']){
-                    unset($aa[$k]);
-                }
-            }
-        }else if(isset($data['upload_loc_id'])) {
-            $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
-            foreach ($aa as $key => $elem){
-                $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
-                $cityUploadDistance = 0;
-                $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
-                if($cityUploadDistance >= $data['upload_loc_radius']){
-                    unset($aa[$key]);
-                }
-            }
-        }
-        if(isset($data['onload_region_id'])){
-            foreach ($aa as $k => $element){
-                if($element->onload_region_id != $data['onload_region_id']){
-                    unset($aa[$k]);
-                }
-            }
-        }else if(isset($data['onload_loc_id'])) {
+         if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])) {
+             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
+             foreach ($aa as $key => $elem) {
+                 $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
+                 $cityUploadDistance = 0;
+                 $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
+                 if ($cityUploadDistance >= $data['upload_loc_radius']) {
+                     unset($aa[$key]);
+                 }
+             }
+         }
+
+//        if(){
+//            foreach ($aa as $k => $element){
+//                if($element->onload_region_id != $data['onload_region_id']){
+//                    unset($aa[$k]);
+//                }
+//            }
+//        }else
+            if(!isset($data['onload_region_id']) && isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
 //            if(isset($data['upload_loc_id'])){
 //                foreach ($result as $elem){
