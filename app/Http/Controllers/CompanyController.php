@@ -582,39 +582,24 @@ class CompanyController extends Controller
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
-        dd(strlen($where_text));
-        if(strlen($where_text) != 0){
-            $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
-                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
-                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
-                            IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at,
-                            IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
-                            upload_reg.Name as upload_region_name, onload_reg.Name as onload_region_name from `goods_orders` as g
-                     JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
-                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                     JOIN russia_only_regions upload_reg ON g.upload_region_id = upload_reg.id
-                     JOIN russia_only_regions onload_reg ON g.onload_region_id = onload_reg.id
-                     JOIN managers managers ON g.manager_id = managers.id
-                    where ${where_text}
-";
-        }else{
-            $sql =  "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
-                            g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
-                            IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
-                            IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at,
-                            IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id,g.distance,
-                            upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
-                            upload_reg.Name as upload_region_name, onload_reg.Name as onload_region_name from `goods_orders` as g
-                     JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
-                     JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
-                     JOIN russia_only_regions upload_reg ON g.upload_region_id = upload_reg.id
-                     JOIN russia_only_regions onload_reg ON g.onload_region_id = onload_reg.id
-                     JOIN managers managers ON g.manager_id = managers.id;
-";
-        }
+
+        $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
+                        g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
+                        IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
+                        IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at,
+                        IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
+                        upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
+                        upload_reg.Name as upload_region_name, onload_reg.Name as onload_region_name from `goods_orders` as g
+                 JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
+                 JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
+                 JOIN russia_only_regions upload_reg ON g.upload_region_id = upload_reg.id
+                 JOIN russia_only_regions onload_reg ON g.onload_region_id = onload_reg.id
+                 JOIN managers managers ON g.manager_id = managers.id
+                where ${where_text}";
+
         $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
         $aa = DB::select($sql);
+        dd($aa);
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
