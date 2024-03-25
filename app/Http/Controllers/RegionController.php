@@ -11,6 +11,7 @@ class RegionController extends Controller
 {
     public function filterCity(Request $request){
         $text = $request['cityName'];
+        dd($text, strlen($text));
         if (strlen($text) < 4){
             return response()->json(['success' => false, 'message' => 'Minimum string length is 2'], 403);
         }
