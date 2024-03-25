@@ -407,7 +407,6 @@ class CompanyController extends Controller
                 }
             }
         }
-        dd($aa);
         if(isset($data['upload_loc_id'])) {
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             foreach ($aa as $key => $elem){
@@ -430,7 +429,6 @@ class CompanyController extends Controller
                 }
             }
         }
-        dd($aa);
         $g = [];
         foreach ($aa as $f){
             $g[] = $f;
