@@ -13,24 +13,7 @@ class GoodsOrdersController extends Controller
     public function createOrder(Request $request){
 
 
-        if($request->all()['payment_type'] == 'без нал'){
-            $validator = Validator::make($request->all(), [
-                'upload_loc_id' => 'required',
-                'onload_loc_id' => 'required',
-                'upload_region_id' => 'required',
-                'onload_region_id' => 'required',
-                'order_title' => 'required',
-                'kuzov_type' => 'required',
-                'loading_type' => 'required',
-                'max_volume' => 'required',
-                'payment_type' => 'required',
-                'prepaid' => 'required',
-                'ruble_per_tonn' => 'required',
-                'company_name' => 'required',
-                'manager_id' => 'required',
-
-            ]);
-        }else{
+        if($request->all()['payment_type'] == 'Без нал'){
             $validator = Validator::make($request->all(), [
                 'upload_loc_id' => 'required',
                 'onload_loc_id' => 'required',
@@ -42,6 +25,24 @@ class GoodsOrdersController extends Controller
                 'max_volume' => 'required',
                 'payment_type' => 'required',
                 'payment_nds' => 'required',
+                'prepaid' => 'required',
+                'ruble_per_tonn' => 'required',
+                'company_name' => 'required',
+                'manager_id' => 'required',
+
+            ]);
+        }else{
+
+            $validator = Validator::make($request->all(), [
+                'upload_loc_id' => 'required',
+                'onload_loc_id' => 'required',
+                'upload_region_id' => 'required',
+                'onload_region_id' => 'required',
+                'order_title' => 'required',
+                'kuzov_type' => 'required',
+                'loading_type' => 'required',
+                'max_volume' => 'required',
+                'payment_type' => 'required',
                 'prepaid' => 'required',
                 'ruble_per_tonn' => 'required',
                 'company_name' => 'required',
