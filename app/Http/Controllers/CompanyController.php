@@ -463,7 +463,7 @@ class CompanyController extends Controller
         $data= $request->all();
 
         $offset = $request->all()['offset'] ?? 0;
-        $limit =  $request->all()['limit'] ?? 3;
+        $limit =  $request->all()['limit'] ?? 10;
 
         if (!isset($data['upload_loc_radius'])){
             $data['upload_loc_radius'] = 5;
