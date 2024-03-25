@@ -72,7 +72,9 @@ class GoodsOrdersController extends Controller
         $goods_orders->end_date = $request->all()['end_date'];
         $goods_orders->max_volume = $validator->validated()['max_volume'];
         $goods_orders->payment_type = $validator->validated()['payment_type'];
-        $goods_orders->payment_nds = $validator->validated()['payment_nds'];
+        if($request->all()['payment_type'] == 'Без нал'){
+            $goods_orders->payment_nds = $validator->validated()['payment_nds'];
+        }
         $goods_orders->prepaid = $validator->validated()['prepaid'];
         $goods_orders->ruble_per_tonn = $validator->validated()['ruble_per_tonn'];
         $goods_orders->company_name = $validator->validated()['company_name'];
