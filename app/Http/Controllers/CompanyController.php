@@ -617,6 +617,7 @@ class CompanyController extends Controller
         $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
 //        dd($sql);
         $aa = DB::select($sql);
+        dd($aa);
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
