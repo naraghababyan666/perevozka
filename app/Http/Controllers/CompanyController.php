@@ -624,12 +624,11 @@ class CompanyController extends Controller
         }
         if(isset($data['upload_region_id'])){
             foreach ($aa as $k => $element){
-                if($element->onload_region_id != $data['upload_region_id']){
+                if($element->upload_region_id != $data['upload_region_id']){
                     unset($aa[$k]);
                 }
             }
-        }
-         else if( isset($data['upload_loc_id'])) {
+        }else if( isset($data['upload_loc_id'])) {
              $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
              foreach ($aa as $key => $elem) {
                  $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();

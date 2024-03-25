@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Validator;
 class GoodsOrdersController extends Controller
 {
     public function createOrder(Request $request){
-
-
         if($request->all()['payment_type'] == 'Без нал'){
             $validator = Validator::make($request->all(), [
                 'upload_loc_id' => 'required',
@@ -32,7 +30,6 @@ class GoodsOrdersController extends Controller
 
             ]);
         }else{
-
             $validator = Validator::make($request->all(), [
                 'upload_loc_id' => 'required',
                 'onload_loc_id' => 'required',
