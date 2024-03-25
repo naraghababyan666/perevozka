@@ -24,12 +24,14 @@ class GoodsOrdersController extends Controller
                 'loading_type' => 'required',
                 'max_volume' => 'required',
                 'payment_type' => 'required',
+                'payment_nds' => 'required',
                 'prepaid' => 'required',
                 'ruble_per_tonn' => 'required',
                 'company_name' => 'required',
                 'manager_id' => 'required',
 
             ]);
+
         }else{
             $validator = Validator::make($request->all(), [
                 'upload_loc_id' => 'required',
@@ -41,7 +43,6 @@ class GoodsOrdersController extends Controller
                 'loading_type' => 'required',
                 'max_volume' => 'required',
                 'payment_type' => 'required',
-                'payment_nds' => 'required',
                 'prepaid' => 'required',
                 'ruble_per_tonn' => 'required',
                 'company_name' => 'required',
