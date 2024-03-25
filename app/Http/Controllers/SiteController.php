@@ -12,6 +12,7 @@ class SiteController extends Controller
         if(!is_null($goodsOrder)){
             if($goodsOrder->is_disabled == '1'){
                 $goodsOrder->is_disabled = '0';
+                $goodsOrder->in_archive_date = null;
             }else{
                 $goodsOrder->is_disabled = '1';
             }
