@@ -89,24 +89,22 @@ class GoodsOrdersController extends Controller
     }
 
     public function updateOrder(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'upload_loc_id' => 'required',
+            'onload_loc_id' => 'required',
+            'upload_region_id' => 'required',
+            'onload_region_id' => 'required',
+            'order_title' => 'required',
+            'kuzov_type' => 'required',
+            'loading_type' => 'required',
+            'max_volume' => 'required',
+            'payment_type' => 'required',
+            'prepaid' => 'required',
+            'ruble_per_tonn' => 'required',
+            'company_name' => 'required',
+            'manager_id' => 'required',
 
-            $validator = Validator::make($request->all(), [
-                'upload_loc_id' => 'required',
-                'onload_loc_id' => 'required',
-                'upload_region_id' => 'required',
-                'onload_region_id' => 'required',
-                'order_title' => 'required',
-                'kuzov_type' => 'required',
-                'loading_type' => 'required',
-                'max_volume' => 'required',
-                'payment_type' => 'required',
-                'prepaid' => 'required',
-                'ruble_per_tonn' => 'required',
-                'company_name' => 'required',
-                'manager_id' => 'required',
-
-            ]);
-
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -134,7 +132,6 @@ class GoodsOrdersController extends Controller
         $goods_orders->company_name = $validator->validated()['company_name'];
         $goods_orders->description = $request->all()['description'] ?? null;
         $goods_orders->manager_id = $validator->validated()['manager_id'];
-        $goods_orders->is_disabled = '0';
         $goods_orders->save();
 
 //        $goods_orders->update($request->all());
