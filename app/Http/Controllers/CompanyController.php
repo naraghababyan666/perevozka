@@ -572,12 +572,12 @@ class CompanyController extends Controller
         if(isset($data['distance'])){
             $where[] = "g.distance = '${data['distance']}'";
         }
-        if(isset($data['upload_region_id'])){
-            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
-        }
-        if(isset($data['onload_region_id'])){
-            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
-        }
+//        if(isset($data['upload_region_id'])){
+//            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
+//        }
+//        if(isset($data['onload_region_id'])){
+//            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
+//        }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
