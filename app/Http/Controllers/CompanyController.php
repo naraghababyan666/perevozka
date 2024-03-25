@@ -615,7 +615,7 @@ class CompanyController extends Controller
 ";
         }
         $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
-//        dd($sql);
+        dd($sql);
         $aa = DB::select($sql);
         dd($aa);
         if(isset($data['kuzov_type'])){
