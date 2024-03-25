@@ -573,12 +573,12 @@ class CompanyController extends Controller
         if(isset($data['distance'])){
             $where[] = "g.distance = '${data['distance']}'";
         }
-        if(isset($data['upload_region_id'])){
-            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
-        }
-        if(isset($data['onload_region_id'])){
-            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
-        }
+//        if(isset($data['upload_region_id'])){
+//            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
+//        }
+//        if(isset($data['onload_region_id'])){
+//            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
+//        }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
@@ -616,7 +616,6 @@ class CompanyController extends Controller
         }
         $sql .= "ORDER BY id LIMIT ${limit} OFFSET ${offset}";
         $aa = DB::select($sql);
-        dd($aa);
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
@@ -624,7 +623,14 @@ class CompanyController extends Controller
                 }
             }
         }
-         if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])) {
+        if(isset($data['upload_region_id'])){
+            foreach ($aa as $k => $element){
+                if($element->onload_region_id != $data['upload_region_id']){
+                    unset($aa[$k]);
+                }
+            }
+        }
+         else if( isset($data['upload_loc_id'])) {
              $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
              foreach ($aa as $key => $elem) {
                  $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
@@ -636,14 +642,14 @@ class CompanyController extends Controller
              }
          }
 
-//        if(){
-//            foreach ($aa as $k => $element){
-//                if($element->onload_region_id != $data['onload_region_id']){
-//                    unset($aa[$k]);
-//                }
-//            }
-//        }else
-            if(!isset($data['onload_region_id']) && isset($data['onload_loc_id'])) {
+        if(isset($data['onload_region_id'])){
+            foreach ($aa as $k => $element){
+                if($element->onload_region_id != $data['onload_region_id']){
+                    unset($aa[$k]);
+                }
+            }
+        }else
+            if(isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
 //            if(isset($data['upload_loc_id'])){
 //                foreach ($result as $elem){
@@ -662,9 +668,9 @@ class CompanyController extends Controller
                 if($cityOnloadDistance >= $data['onload_loc_radius']){
                     unset($aa[$key]);
                 }
-//                }
+                }
             }
-        }
+
         $g = [];
         foreach ($aa as $f){
             $g[] = $f;
