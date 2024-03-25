@@ -572,17 +572,16 @@ class CompanyController extends Controller
         if(isset($data['distance'])){
             $where[] = "g.distance = '${data['distance']}'";
         }
-//        if(isset($data['upload_region_id'])){
-//            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
-//        }
-//        if(isset($data['onload_region_id'])){
-//            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
-//        }
+        if(isset($data['upload_region_id'])){
+            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
+        }
+        if(isset($data['onload_region_id'])){
+            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
+        }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
         }
-
         if(strlen($where_text) != 0){
             $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.upload_region_id, g.onload_loc_id, g.onload_region_id, g.onload_loc_address, g.kuzov_type, g.loading_type, g.start_date, g.end_date,
                             g.max_volume, g.payment_type, g.payment_nds, g.ruble_per_tonn,IF(${data['is_subscribed']} = 1, managers.phone_number, NULL) AS manager_phone_number,
@@ -622,43 +621,39 @@ class CompanyController extends Controller
                 }
             }
         }
-        if(isset($data['upload_region_id'])){
-            foreach ($aa as $k => $element){
-                if($element->upload_region_id != $data['upload_region_id']){
-                    unset($aa[$k]);
-                }
-            }
-        }else if( isset($data['upload_loc_id'])) {
-             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
-             foreach ($aa as $key => $elem) {
-                 $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
-                 $cityUploadDistance = 0;
-                 $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
-                 if ($cityUploadDistance >= $data['upload_loc_radius']) {
-                     unset($aa[$key]);
-                 }
-             }
-         }
 
-        if(isset($data['onload_region_id'])){
-            foreach ($aa as $k => $element){
-                if($element->onload_region_id != $data['onload_region_id']){
-                    unset($aa[$k]);
+//        if(isset($data['upload_region_id'])){
+//            foreach ($aa as $k => $element){
+//                if($element->upload_region_id != $data['upload_region_id']){
+//                    unset($aa[$k]);
+//                }
+//            }
+//        }else if( isset($data['upload_loc_id'])) {
+//             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
+//             foreach ($aa as $key => $elem) {
+//                 $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
+//                 $cityUploadDistance = 0;
+//                 $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
+//                 if ($cityUploadDistance >= $data['upload_loc_radius']) {
+//                     unset($aa[$key]);
+//                 }
+//             }
+//         }
+
+        if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])){
+            $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
+            foreach ($aa as $key => $elem) {
+                $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
+                $cityUploadDistance = 0;
+                $cityUploadDistance = ($this->calculateDistance($cityUploadFromDB['Longitude'], $cityUploadFromDB['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
+                if ($cityUploadDistance >= $data['upload_loc_radius']) {
+                    unset($aa[$key]);
                 }
             }
-        }else
-            if(isset($data['onload_loc_id'])) {
+        }
+
+        if(!isset($data['onload_region_id']) && isset($data['onload_loc_id'])){
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
-//            if(isset($data['upload_loc_id'])){
-//                foreach ($result as $elem){
-//                    $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
-//                    $cityOnloadDistance = 0;
-//                    $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
-//                    if($cityOnloadDistance > $data['onload_loc_radius']){
-//                        unset($elem);
-//                    }
-//                }
-//            }else{
             foreach ($aa as $key => $elem){
                 $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
                 $cityOnloadDistance = 0;
@@ -666,8 +661,37 @@ class CompanyController extends Controller
                 if($cityOnloadDistance >= $data['onload_loc_radius']){
                     unset($aa[$key]);
                 }
-                }
             }
+        }
+
+//        if(isset($data['onload_region_id'])){
+//            foreach ($aa as $k => $element){
+//                if($element->onload_region_id != $data['onload_region_id']){
+//                    unset($aa[$k]);
+//                }
+//            }
+//        }else
+//            if(isset($data['onload_loc_id'])) {
+//            $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
+////            if(isset($data['upload_loc_id'])){
+////                foreach ($result as $elem){
+////                    $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
+////                    $cityOnloadDistance = 0;
+////                    $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
+////                    if($cityOnloadDistance > $data['onload_loc_radius']){
+////                        unset($elem);
+////                    }
+////                }
+////            }else{
+//            foreach ($aa as $key => $elem){
+//                $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
+//                $cityOnloadDistance = 0;
+//                $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
+//                if($cityOnloadDistance >= $data['onload_loc_radius']){
+//                    unset($aa[$key]);
+//                }
+//                }
+//            }
 
         $g = [];
         foreach ($aa as $f){
