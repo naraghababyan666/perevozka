@@ -611,7 +611,7 @@ class CompanyController extends Controller
 //                }
 //            }
 //        }else
-            if(isset($data['upload_loc_id'])) {
+            if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])) {
              $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
              foreach ($aa as $key => $elem) {
                  $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
@@ -653,7 +653,7 @@ class CompanyController extends Controller
 //                }
 //            }
 //        }else
-            if(isset($data['onload_loc_id'])) {
+            if(!isset($data['onload_region_id']) && isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
             foreach ($aa as $key => $elem){
                 $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
