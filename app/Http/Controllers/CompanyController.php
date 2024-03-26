@@ -572,12 +572,12 @@ class CompanyController extends Controller
         if(isset($data['distance'])){
             $where[] = "g.distance = '${data['distance']}'";
         }
-//        if(isset($data['upload_region_id'])){
-//            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
-//        }
-//        if(isset($data['onload_region_id'])){
-//            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
-//        }
+        if(isset($data['upload_region_id'])){
+            $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
+        }
+        if(isset($data['onload_region_id'])){
+            $where[] = "g.onload_region_id = '${data['onload_region_id']}'";
+        }
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
@@ -588,8 +588,7 @@ class CompanyController extends Controller
                         IF(${data['is_subscribed']} = 1, managers.FullName, NULL) AS manager_name, g.order_title,
                         IF(${data['is_subscribed']} = 1, g.company_name, NULL) AS company_name, g.is_disabled, g.created_at,
                         IF(${data['is_subscribed']} = 1, g.description, NULL) AS order_description, g.prepaid, g.manager_id, g.distance,
-                        upload.CityName AS upload_city_name, onload.CityName AS onload_city_name,
-                        upload.CityNameEng as upload_region_name, onload.CityNameEng as onload_region_name from `goods_orders` as g
+                        upload.CityName AS upload_city_name, onload.CityName AS onload_city_name from `goods_orders` as g
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                  JOIN managers managers ON g.manager_id = managers.id
@@ -605,13 +604,14 @@ class CompanyController extends Controller
             }
         }
 
-        if(isset($data['upload_region_id'])){
-            foreach ($aa as $k => $element){
-                if($element->upload_region_id != $data['upload_region_id']){
-                    unset($aa[$k]);
-                }
-            }
-        }else if(isset($data['upload_loc_id'])) {
+//        if(isset($data['upload_region_id'])){
+//            foreach ($aa as $k => $element){
+//                if($element->upload_region_id != $data['upload_region_id']){
+//                    unset($aa[$k]);
+//                }
+//            }
+//        }else
+            if(isset($data['upload_loc_id'])) {
              $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
              foreach ($aa as $key => $elem) {
                  $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
@@ -646,13 +646,14 @@ class CompanyController extends Controller
 //            }
 //        }
 
-        if(isset($data['onload_region_id'])){
-            foreach ($aa as $k => $element){
-                if($element->onload_region_id != $data['onload_region_id']){
-                    unset($aa[$k]);
-                }
-            }
-        }else if(isset($data['onload_loc_id'])) {
+//        if(isset($data['onload_region_id'])){
+//            foreach ($aa as $k => $element){
+//                if($element->onload_region_id != $data['onload_region_id']){
+//                    unset($aa[$k]);
+//                }
+//            }
+//        }else
+            if(isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
             foreach ($aa as $key => $elem){
                 $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
