@@ -633,7 +633,7 @@ class CompanyController extends Controller
 
         $h5 = Carbon::now()->toDateTimeString();
         $aa = DB::select($sql);
-
+        dd($sql);
         $h6 = Carbon::now()->toDateTimeString();
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
