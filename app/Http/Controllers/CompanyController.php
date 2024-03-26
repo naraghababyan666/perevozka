@@ -634,7 +634,6 @@ class CompanyController extends Controller
         $h5 = Carbon::now()->toDateTimeString();
         $aa = DB::select($sql);
         $h6 = Carbon::now()->toDateTimeString();
-        dd($h1,$h2,$h3,$h4,$h5,$h6);
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
