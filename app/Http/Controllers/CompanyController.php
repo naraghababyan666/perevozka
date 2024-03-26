@@ -611,7 +611,7 @@ class CompanyController extends Controller
                     unset($aa[$k]);
                 }
             }
-        }else if( isset($data['upload_loc_id'])) {
+        }else if(isset($data['upload_loc_id'])) {
              $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
              foreach ($aa as $key => $elem) {
                  $cityUploadFromDB = RussiaRegions::query()->where('CityId', $elem->upload_loc_id)->first();
@@ -621,7 +621,9 @@ class CompanyController extends Controller
                      unset($aa[$key]);
                  }
              }
-         }
+         } else{
+            exit();
+        }
 
 //        if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])){
 //            $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
@@ -654,16 +656,6 @@ class CompanyController extends Controller
             }
         }else if(isset($data['onload_loc_id'])) {
             $cityOnloadFromRequest = RussiaRegions::query()->where('CityId', $data['onload_loc_id'])->first();
-//            if(isset($data['upload_loc_id'])){
-//                foreach ($result as $elem){
-//                    $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
-//                    $cityOnloadDistance = 0;
-//                    $cityOnloadDistance = ($this->calculateDistance($cityOnloadFromDB['Longitude'], $cityOnloadFromDB['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
-//                    if($cityOnloadDistance > $data['onload_loc_radius']){
-//                        unset($elem);
-//                    }
-//                }
-//            }else{
             foreach ($aa as $key => $elem){
                 $cityOnloadFromDB = RussiaRegions::query()->where('CityId', $elem->onload_loc_id)->first();
                 $cityOnloadDistance = 0;
@@ -672,6 +664,8 @@ class CompanyController extends Controller
                     unset($aa[$key]);
                 }
             }
+        } else{
+            exit();
         }
 
         $g = [];
