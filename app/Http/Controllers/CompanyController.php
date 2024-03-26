@@ -629,7 +629,7 @@ class CompanyController extends Controller
                  JOIN managers managers ON g.manager_id = managers.id
                 where ${where_text}";
 
-        $sql .= " ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}";
+        $sql .= " ORDER BY is_disabled DESC LIMIT ${limit} OFFSET ${offset}";
 
         $h5 = Carbon::now()->toDateTimeString();
         $aa = DB::select($sql);
