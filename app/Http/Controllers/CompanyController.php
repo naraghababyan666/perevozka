@@ -461,7 +461,6 @@ class CompanyController extends Controller
 
     public function getOrders(\Illuminate\Http\Request $request){
         $data= $request->all();
-        $h1 = Carbon::now()->toDateTimeString();
         $offset = $request->all()['offset'] ?? 0;
         $limit =  $request->all()['limit'] ?? 10;
 
@@ -573,7 +572,6 @@ class CompanyController extends Controller
             $where[] = "g.distance = '${data['distance']}'";
         }
 
-        $h2 = Carbon::now()->toDateTimeString();
         if(isset($data['upload_region_id'])){
             $where[] = "g.upload_region_id = '${data['upload_region_id']}'";
         }
@@ -583,7 +581,6 @@ class CompanyController extends Controller
 //        $upload_nearest_ids = [];
 //        $onload_nearest_ids = [];
 
-        $h3 = Carbon::now()->toDateTimeString();
         if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])){
             $cityUploadFromRequest = RussiaRegions::query()->where('CityId', $data['upload_loc_id'])->first();
             $cities = RussiaRegions::all();
@@ -612,8 +609,6 @@ class CompanyController extends Controller
             $strOnloadIds = implode(",", $onload_city_ids);
             $where[] = "g.onload_loc_id IN (${strOnloadIds})";
         }
-
-        $h4 = Carbon::now()->toDateTimeString();
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
@@ -630,10 +625,7 @@ class CompanyController extends Controller
                 where ${where_text}";
 
         $sql .= " ORDER BY is_disabled DESC LIMIT ${limit} OFFSET ${offset}";
-
-        $h5 = Carbon::now()->toDateTimeString();
         $aa = DB::select($sql);
-        $h6 = Carbon::now()->toDateTimeString();
         if(isset($data['kuzov_type'])){
             foreach ($aa as $key => $item){
                 if(!$this->hasCommonValue(json_decode($item->kuzov_type), json_decode($data['kuzov_type']))){
