@@ -621,8 +621,6 @@ class CompanyController extends Controller
                      unset($aa[$key]);
                  }
              }
-         } else{
-            exit();
         }
 
 //        if(!isset($data['upload_region_id']) && isset($data['upload_loc_id'])){
@@ -664,8 +662,6 @@ class CompanyController extends Controller
                     unset($aa[$key]);
                 }
             }
-        } else{
-            exit();
         }
 
         $g = [];
