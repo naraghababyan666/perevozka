@@ -586,9 +586,9 @@ class CompanyController extends Controller
             $cities = RussiaRegions::all();
             foreach ($cities as $key => $elem) {
                 $cityUploadDistance = 0;
-                $cityUploadDistance = ($this->calculateDistance($elem['Longitude'], $elem['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
+                $cityUploadDistance = ($this->calculateDistance($elem['Latitude'],$elem['Longitude'], $cityUploadFromRequest['Latitude'], $cityUploadFromRequest['Longitude']));
                 if ($cityUploadDistance <= $data['upload_loc_radius']) {
-                    $upload_city_ids[] = $elem['id'];
+                    $upload_city_ids[] = $elem['CityId'];
                 }
             }
             $upload_city_ids[] = $data['upload_loc_id'];
@@ -602,13 +602,14 @@ class CompanyController extends Controller
                 $cityOnloadDistance = 0;
                 $cityOnloadDistance = ($this->calculateDistance($elem['Longitude'], $elem['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
                 if ($cityOnloadDistance <= $data['onload_loc_radius']) {
-                    $onload_city_ids[] = $elem['id'];
+                    $onload_city_ids[] = $elem['CityId'];
                 }
             }
             $onload_city_ids[] = $data['onload_loc_id'];
             $strOnloadIds = implode(",", $onload_city_ids);
             $where[] = "g.onload_loc_id IN (${strOnloadIds})";
         }
+
         $where[] = "g.is_disabled = '0'";
         if(!empty($where)){
             $where_text = implode(' AND ', $where);
