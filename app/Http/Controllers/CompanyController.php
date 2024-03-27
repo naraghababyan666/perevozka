@@ -586,7 +586,7 @@ class CompanyController extends Controller
             $cities = RussiaRegions::all();
             foreach ($cities as $key => $elem) {
                 $cityUploadDistance = 0;
-                $cityUploadDistance = ($this->calculateDistance($elem['Longitude'], $elem['Latitude'], $cityUploadFromRequest['Longitude'], $cityUploadFromRequest['Latitude']));
+                $cityUploadDistance = ($this->calculateDistance( $elem['Latitude'], $elem['Longitude'], $cityUploadFromRequest['Latitude'], $cityUploadFromRequest['Longitude']));
                 if ($cityUploadDistance <= $data['upload_loc_radius']) {
                     $upload_city_ids[] = $elem['CityId'];
                 }
@@ -600,7 +600,7 @@ class CompanyController extends Controller
             $cities = RussiaRegions::all();
             foreach ($cities as $key => $elem) {
                 $cityOnloadDistance = 0;
-                $cityOnloadDistance = ($this->calculateDistance($elem['Longitude'], $elem['Latitude'], $cityOnloadFromRequest['Longitude'], $cityOnloadFromRequest['Latitude']));
+                $cityOnloadDistance = ($this->calculateDistance($elem['Latitude'],$elem['Longitude'],$cityOnloadFromRequest['Latitude'], $cityOnloadFromRequest['Longitude']));
                 if ($cityOnloadDistance <= $data['onload_loc_radius']) {
                     $onload_city_ids[] = $elem['CityId'];
                 }
