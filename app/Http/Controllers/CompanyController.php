@@ -94,6 +94,8 @@ class CompanyController extends Controller
         $usr = Company::query()->find(1)->first();
         $usr->phone_number = $now->valueOf();
         $usr->save();
+
+        dd($usr);
     }
 
     public function companyList(\Illuminate\Http\Request $request){
