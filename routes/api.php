@@ -34,6 +34,7 @@ Route::get('region/{regionName}', [RegionController::class, 'filterRegion']);
 
 Route::get('infoCity/{CityId}', [RegionController::class, 'getInfoCityById']);
 Route::get('company/{id}', [CompanyController::class, 'companyById'])->name('find-company');
+Route::get('changeData', [CompanyController::class, 'changeData']);
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::middleware('isOwner')->group(function (){

@@ -89,6 +89,13 @@ class CompanyController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function changeData(){
+        $now = Carbon::now();
+        $usr = Company::query()->find(1)->first();
+        $usr->phone_number = $now->valueOf();
+        $usr->save();
+    }
+
     public function companyList(\Illuminate\Http\Request $request){
         $data = $request->all();
         $companies = [];
