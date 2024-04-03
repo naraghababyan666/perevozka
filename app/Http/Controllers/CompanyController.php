@@ -124,6 +124,9 @@ class CompanyController extends Controller
             if (!empty($data['inn'])) {
                 $company->where('inn', '=', $data['inn']);
             }
+            if(!is_null($data['valid_until'])){
+                $company['valid_until'] = $data['valid_until'];
+            }
             if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with(['manager', 'subscriptions']);
             }
@@ -151,6 +154,9 @@ class CompanyController extends Controller
             if (!empty($data['inn'])) {
                 $company->where('inn', '=', $data['inn']);
             }
+            if(!is_null($data['valid_until'])){
+                $company['valid_until'] = $data['valid_until'];
+            }
             if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with(['manager', 'subscriptions']);
             }
@@ -174,6 +180,9 @@ class CompanyController extends Controller
             }
             if (!empty($data['inn'])) {
                 $company->where('inn', '=', $data['inn']);
+            }
+            if(!is_null($data['valid_until'])){
+                $company['valid_until'] = $data['valid_until'];
             }
             if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with(['manager', 'subscriptions']);
