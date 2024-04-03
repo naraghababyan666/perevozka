@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ConfigController extends Controller
 {
@@ -53,6 +54,7 @@ class ConfigController extends Controller
      */
     public function update(Request $request)
     {
+
         $request->validate([
             'tariff_name_1' => 'required',
             'tariff_price_1' => 'required',
@@ -63,6 +65,16 @@ class ConfigController extends Controller
             'free_subscription' => 'required',
             'free_subscription_until' => 'required'
         ]);
+//        $validator = Validator::make($request->all(), [
+//            'company_id' => 'required',
+//            'valid_until' => 'required'
+//        ]);
+//        if ($validator->fails()) {
+//            return response()->json([
+//                'success' => false,
+//                "errors" => $validator->errors()
+//            ])->header('Status-Code', 203);
+//        }
         Config::query()->first()->update($request->all());
         return response()->json(['success' => true]);
     }
