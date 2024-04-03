@@ -46,10 +46,9 @@ class Company extends Authenticatable
         return $this->hasOne(Subscriptions::class, 'id', 'company_id');
     }
 
-    public function getValidUntilAttribute(){
-        $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
+    public function getValidUntilAttribute($id){
+        $data = Subscriptions::query()->where('company_id', $id)->where('valid_until', '>', Carbon::now())->first();
         if(!is_null($data)){
-            dd($data);
              return $data['valid_until'];
         }else{
             return null;
