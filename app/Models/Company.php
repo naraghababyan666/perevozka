@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class Company extends Authenticatable
@@ -40,6 +42,15 @@ class Company extends Authenticatable
     }
     public function subscriptions(){
         return $this->hasOne(Subscriptions::class, 'id', 'company_id');
+    }
+
+    public function subs(){
+        $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
+        if(!is_null($data)){
+             return $data['valid_until'];
+        }else{
+            return null;
+        }
     }
 
 
