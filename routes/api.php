@@ -71,7 +71,7 @@ Route::middleware('auth:sanctum')->group(function (){
         Route::delete('user/{id}', [AdminController::class, 'deleteUser']);
 
         Route::get('configs', [ConfigController::class, 'index']);
-        Route::post('configs', [ConfigController::class, 'update']);
+        Route::post('change-configs', [ConfigController::class, 'update']);
 
         Route::put('users/change-subscription', [AdminController::class, 'changeSubscription']);
 
