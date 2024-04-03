@@ -190,7 +190,6 @@ class CompanyController extends Controller
                     $c['valid_until'] = null;
                 }
             }
-            dd($company);
 
             return response()->json(['success' => true, 'data' => $company]);
         }else{
