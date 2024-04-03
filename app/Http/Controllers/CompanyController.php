@@ -103,6 +103,7 @@ class CompanyController extends Controller
         $data = $request->all();
         $companies = [];
         $company = Company::query();
+        dd($data);
         $limit = $request->all()['limit'] ?? 5;
         if(Auth::user()['role_id'] == Company::IS_OWNER){
 //            $sql =  "SELECT c.id,  c.email, c.role_id, c.company_name,
