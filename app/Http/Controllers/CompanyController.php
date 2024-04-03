@@ -183,7 +183,7 @@ class CompanyController extends Controller
             }
             $company = $company->paginate($limit);
             foreach ($company as $c){
-                $c->getValidUntilAttribute($c['id']);
+                $c['valid_until'] = $c->getValidUntilAttribute($c['id']);
             }
 
             return response()->json(['success' => true, 'data' => $company]);
