@@ -151,7 +151,7 @@ class CompanyController extends Controller
             if (!empty($data['inn'])) {
                 $company->where('inn', '=', $data['inn']);
             }
-            if($data['is_subscribed'] == 1){
+            if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with(['manager', 'subscriptions']);
             }
             $company = $company->paginate($limit);
@@ -175,7 +175,7 @@ class CompanyController extends Controller
             if (!empty($data['inn'])) {
                 $company->where('inn', '=', $data['inn']);
             }
-            if($data['is_subscribed'] == 1){
+            if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with(['manager', 'subscriptions']);
             }
             $company = $company->paginate($limit);
