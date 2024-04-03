@@ -47,7 +47,7 @@ class Company extends Authenticatable
     public function subs(){
         $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
         if($data){
-            dd($data);
+            dd($data['valid_until']);
              return $data['valid_until'];
         }else{
             return null;
