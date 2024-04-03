@@ -23,13 +23,15 @@ class CheckSubscriptionMiddleware
             $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
             if(!is_null($data)){
                 $request['is_subscribed'] = 1;
-                $request['valid_until_date'] = $data['valid_until'];
+                $request['valid_until'] = $data['valid_until'];
 //                dd($data);
             }else{
                 if(Config::query()->find(1)->first()['free_subscription'] != 0){
                     $request['is_subscribed'] = 1;
+                    $request['valid_until'] = null;
                 }else{
                     $request['is_subscribed'] = 0;
+                    $request['valid_until'] = null;
                 }
             }
             return $next($request);
