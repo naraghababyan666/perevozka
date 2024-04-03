@@ -67,7 +67,7 @@ class AdminController extends Controller
         $data = Subscriptions::query()->create([
             'company_id' => $validator->validated()['company_id'],
             'valid_until' => $validator->validated()['valid_until'],
-            'role_id' => Company::query()->where(['id', $validator->validated()['company_id']])->first()['role_id']
+            'role_id' => Company::query()->where('id', $validator->validated()['company_id'])->first()['role_id']
         ]);
 
         return response()->json(['success' => true]);
