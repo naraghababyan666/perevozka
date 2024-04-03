@@ -129,7 +129,12 @@ class CompanyController extends Controller
             }
             $company = $company->paginate($limit);
             foreach ($company as $c){
-                $c->getValidUntilAttribute($c['id']);
+                $data = Subscriptions::query()->where('company_id', $c['id'])->where('valid_until', '>', Carbon::now())->first();
+                if(!is_null($data)){
+                    $c['valid_until'] = $data['valid_until'];
+                }else{
+                    $c['valid_until'] = null;
+                }
             }
 
             return response()->json(['success' => true, 'data' => $company]);
@@ -156,6 +161,14 @@ class CompanyController extends Controller
             }
             if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with(['manager']);
+            }
+            foreach ($company as $c){
+                $data = Subscriptions::query()->where('company_id', $c['id'])->where('valid_until', '>', Carbon::now())->first();
+                if(!is_null($data)){
+                    $c['valid_until'] = $data['valid_until'];
+                }else{
+                    $c['valid_until'] = null;
+                }
             }
             $company = $company->paginate($limit);
 
