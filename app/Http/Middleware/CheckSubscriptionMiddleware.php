@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Config;
 use App\Models\Subscriptions;
 use Carbon\Carbon;
 use Closure;
@@ -22,9 +23,12 @@ class CheckSubscriptionMiddleware
             $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
             if(!is_null($data)){
                 $request['is_subscribed'] = 1;
-
             }else{
-                $request['is_subscribed'] = 0;
+                if(Config::query()->find(1)->first()['free_subscription'] != 0){
+                    $request['is_subscribed'] = 1;
+                }else{
+                    $request['is_subscribed'] = 0;
+                }
             }
             return $next($request);
         }else{

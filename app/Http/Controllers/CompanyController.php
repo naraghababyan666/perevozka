@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\CheckSubscriptionMiddleware;
 use App\Models\Company;
+use App\Models\Config;
 use App\Models\GoodsOrders;
 use App\Models\Region;
 use App\Models\Review;
@@ -123,7 +124,7 @@ class CompanyController extends Controller
             if (!empty($data['inn'])) {
                 $company->where('inn', '=', $data['inn']);
             }
-            if($data['is_subscribed'] == 1){
+            if($data['is_subscribed'] == 1 || Config::query()->find(1)->first()['free_subscription'] != 0){
                 $company->with('manager');
             }
             $company = $company->paginate($limit);
