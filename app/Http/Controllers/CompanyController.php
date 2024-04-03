@@ -189,9 +189,8 @@ class CompanyController extends Controller
                 }else{
                     $c['valid_until'] = null;
                 }
-                dd($c);
-
             }
+            dd($company);
 
             return response()->json(['success' => true, 'data' => $company]);
         }else{
