@@ -30,6 +30,8 @@ class Company extends Authenticatable
         'password'
     ];
 
+    protected $appends = ['valid_until'];
+
     public function manager(){
         return $this->belongsTo(Manager::class, 'id', 'company_id');
     }
@@ -44,7 +46,7 @@ class Company extends Authenticatable
         return $this->hasOne(Subscriptions::class, 'id', 'company_id');
     }
 
-    public function subs(){
+    public function getValidUntilAttribute(){
         $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
         if($data){
              return $data['valid_until'];
