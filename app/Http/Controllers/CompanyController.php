@@ -128,6 +128,9 @@ class CompanyController extends Controller
                 $company->with(['manager']);
             }
             $company = $company->paginate($limit);
+            foreach ($company as $c){
+                $c->getValidUntilAttribute($c['id']);
+            }
 
             return response()->json(['success' => true, 'data' => $company]);
         }
@@ -179,6 +182,9 @@ class CompanyController extends Controller
                 $company->with(['manager']);
             }
             $company = $company->paginate($limit);
+            foreach ($company as $c){
+                $c->getValidUntilAttribute($c['id']);
+            }
 
             return response()->json(['success' => true, 'data' => $company]);
         }else{
