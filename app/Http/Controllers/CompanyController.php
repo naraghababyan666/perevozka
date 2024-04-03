@@ -184,6 +184,7 @@ class CompanyController extends Controller
             $company = $company->paginate($limit);
             foreach ($company as $c){
                 $data = Subscriptions::query()->where('company_id', $c['id'])->where('valid_until', '>', Carbon::now())->first();
+                dd($data);
                 if(!is_null($data)){
                     $c['valid_until'] = $data['valid_until'];
                 }else{
