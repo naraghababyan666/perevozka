@@ -64,6 +64,7 @@ class AdminController extends Controller
                 "errors" => $validator->errors()
             ])->header('Status-Code', 203);
         }
+        Subscriptions::query()->where('company_id', $validator->validated()['company_id'])->delete();
         $data = Subscriptions::query()->create([
             'company_id' => $validator->validated()['company_id'],
             'valid_until' => $validator->validated()['valid_until'],
