@@ -63,7 +63,6 @@ class ConfigController extends Controller
             'tariff_name_3' => 'required',
             'tariff_price_3' => 'required',
             'free_subscription' => 'required',
-            'free_subscription_until' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
