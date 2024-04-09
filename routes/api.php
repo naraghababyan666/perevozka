@@ -25,7 +25,9 @@ use \App\Http\Controllers\ConfigController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::get('aaa', function (){
+    \App\Jobs\GoodsArchive::dispatch();
+});
 Route::post('/registration', [AuthController::class, 'registration']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
