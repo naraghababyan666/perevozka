@@ -17,16 +17,24 @@ class FavoritesController extends Controller
 {
     public function user(Request $request){
         $user = Auth::user();
+        $config = DB::table('configs')->where('id', 1)->first();
+        $tariff_price_str = 'tariff_price_' . Auth::user()['role_id'];
+        $tariff_name_str= 'tariff_name_' . Auth::user()['role_id'];
+
         $this->makeSubscription();
         $data = Subscriptions::query()->where('company_id', Auth::id())->where('valid_until', '>', Carbon::now())->first();
         if(!is_null($data)){
             $user['valid_until'] = $data['valid_until'];
             $user['isSubscribed'] = 1;
         }
-        $user['isSubscribed'] = 1;
+//        $user['isSubscribed'] = 1;
+        $user['tariff']->tariff_name = '';
 
-        $tariff = DB::table('tariff')->where('role_id', Auth::user()['role_id'])->first();
-        $user['tariff'] = $tariff;
+        dd($user);
+        $user['tariff']['tariff_name'] = $config->$tariff_name_str;
+
+        dd($user);
+        $user['tariff_price'] = $config->$tariff_price_str;
         return response()->json(['user' => $user]);
 
     }

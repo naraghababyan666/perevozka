@@ -261,8 +261,16 @@ class CompanyController extends Controller
         }
     }
 
-    public function getMyOrders(){
+    public function getMyOrders(\Illuminate\Http\Request $request){
         $userID = Auth::id();
+        $data = $request->all();
+        if(isset($data['manager_id'])){
+            $where[] = "g.manager_id = '${data['manager_id']}'";
+        }
+        $where[] = "g.company_id = '${userID}'";
+        if(!empty($where)){
+            $where_text = implode(' AND ', $where);
+        }
         $sql = "SELECT g.id, g.company_id, g.upload_loc_id, g.onload_loc_id, g.onload_loc_address, g.order_title, g.kuzov_type,
                         g.loading_type, g.start_date, g.end_date, g.max_volume, g.payment_type, g.payment_nds, g.prepaid, g.ruble_per_tonn,
                         g.company_name, g.is_disabled, g.created_at,g.description,g.distance , g.manager_id,managers.phone_number, managers.FullName,
@@ -272,7 +280,7 @@ class CompanyController extends Controller
                  JOIN russia_regions upload ON g.upload_loc_id = upload.CityId
                  JOIN russia_regions onload ON g.onload_loc_id = onload.CityId
                  JOIN managers managers ON g.manager_id = managers.id
-                WHERE g.company_id = '${userID}';
+                WHERE {$where_text};
                 ";
         $orders = DB::select($sql);
         return response()->json(['success' => true, 'data' => $orders]);

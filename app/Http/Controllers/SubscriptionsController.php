@@ -23,13 +23,17 @@ class SubscriptionsController extends Controller
         $amount = $tariff->price;
         $description = $request->input('description') ?? '';
 
+        $config = DB::table('configs')->where('id', 1)->first();
+        $amount = 'tariff_price_' . Auth::user()['role_id'];
+        $tariff_price = $config->$amount;
+
 //        $transaction = Transactions::query()->create([
 //            'amount' => $amount,
 //            'description' => $description
 //        ]);
 
 //        if($transaction){
-        $link = $service->createPayment($amount, $description);
+        $link = $service->createPayment($tariff_price, $description);
 //        }
         return response()->json(['success' => true, 'link' => $link]);
 
