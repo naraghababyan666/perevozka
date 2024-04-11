@@ -28,13 +28,15 @@ class FavoritesController extends Controller
             $user['isSubscribed'] = 1;
         }
 //        $user['isSubscribed'] = 1;
-        $user['tariff']->tariff_name = '';
 
-        dd($user);
-        $user['tariff']['tariff_name'] = $config->$tariff_name_str;
+        $tariff = [];
+        $tariff['tariff_name'] = $config->$tariff_name_str;
+        $tariff['price'] = $config->$tariff_price_str;
+        $tariff['role_id'] = Auth::user()['role_id'];
+        $user['tariff'] = $tariff;
 
-        dd($user);
-        $user['tariff_price'] = $config->$tariff_price_str;
+//        $user['tariff']['tariff_name'] = $config->$tariff_name_str;
+
         return response()->json(['user' => $user]);
 
     }
