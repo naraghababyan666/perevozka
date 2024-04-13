@@ -35,7 +35,7 @@ class GoodsArchive extends Command
                 if($good['end_date'] < Carbon::now()){
                     GoodsOrders::query()->where('id', $good['id'])->update([
                         'is_disabled' => '1',
-                        'in_archive_date' => Carbon::now()->addDays(15)]
+                        'in_archive_date' => Carbon::now()->addDays(7)]
                     );
                 }
             }else{
@@ -48,7 +48,7 @@ class GoodsArchive extends Command
                     }
                 }else{
                     GoodsOrders::query()->where('id', $good['id'])->update([
-                        'in_archive_date' => Carbon::now()->addDays(15)]
+                        'in_archive_date' => Carbon::now()->addDays(7)]
                     );
                 }
 
