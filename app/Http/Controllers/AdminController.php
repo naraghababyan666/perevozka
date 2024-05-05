@@ -76,11 +76,22 @@ class AdminController extends Controller
     }
 
     public function sendMail(Request $request){
-        $text = $request->all()['text'];
+        $text = $request->all()['text'] ?? `Уважаемые пользователи!
+Команда Transagro сообщает об обновлении приложения.`;
 
         $users = Company::all();
         foreach ($users as $user){
-            Mail::to($user['email'])->send(new SendMail($text));
+            if(filter_var($user['email'], FILTER_VALIDATE_EMAIL)){
+                try{
+                    Mail::to($user['email'])->send(new SendMail($text));
+                }
+                catch (\Exception $exception){
+//                    dd($exception->getMessage());
+                    continue;
+                }
+            }
+
+
         }
         return response()->json(['success' => true]);
     }
